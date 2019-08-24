@@ -236,11 +236,8 @@ if __name__ == '__main__':
 
         # Write Meeting end time
         if text_str == 'Meeting':
-            if slack_exp_uni != 0:
-                slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni).strftime("~%I:%M %p")
-                meeting_end = slack_exp
-            else:
-                meeting_end = gc_time_get()
+            slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni).strftime("~%I:%M %p")
+            meeting_end = slack_exp
             ui_image = cv2.putText(ui_image, meeting_end, (400, 350), cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC ,2,(200,200,200),3,cv2.LINE_AA)
 
         cv2.imshow("MyStatus", ui_image)
