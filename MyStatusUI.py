@@ -158,7 +158,7 @@ if __name__ == '__main__':
     slack_stat = ""
     slack_stat_old = ""
     if platform.system() == "Linux":
-        os.chdir('/home/pi/Desktop')
+        os.chdir('/home/pi/Projects/SlackStatusUI')
     pdirname = os.getcwd()
     dirname = os.path.join(pdirname, "data")
     
