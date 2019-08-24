@@ -1,4 +1,4 @@
-"""Showing status from Slack."""
+"""Showing status from Slack profile."""
 import requests
 import os.path
 import cv2
@@ -187,8 +187,6 @@ if __name__ == '__main__':
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
-        """dummy_stat = 'In a meeting'
-        slack_stat = dummy_stat"""
 
         if slack_stat == 'Home':
             img_file = os.path.join(dirname, 'Home.png')
