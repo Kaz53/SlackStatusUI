@@ -209,11 +209,12 @@ if __name__ == '__main__':
             text_pos = (300, 270)
             font_size = 3
         else:
+            slack_stat == 'At work'
             img_file = os.path.join(dirname, 'Work.png')
             text_str = 'At office'
             text_pos = (200, 270)
             font_size = 4
-            profile = {"status_text": text_str, "status_emoji": ":office:", "status_expiration": 0}
+            profile = {"status_text": slack_stat, "status_emoji": ":office:", "status_expiration": 0}
             profile = json.dumps(profile)
             data["profile"] = profile
             slack_res_str = requests.post(Slack_url_set, data=data)
