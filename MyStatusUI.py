@@ -1,3 +1,4 @@
+"""Showing status from Slack."""
 import requests
 import os.path
 import cv2
@@ -17,8 +18,8 @@ import time
 import json
 
 
-# Getting Google Calendar Event end time
 def gc_time_get():
+    """Getting Google Calendar Event end time."""
     # If modifying these scopes, delete the file token.pickle.
     gc_scopes = ['https://www.googleapis.com/auth/calendar.readonly']
     # Shows basic usage of the Google Calendar API.
@@ -55,8 +56,9 @@ def gc_time_get():
     now = datetime.datetime.utcnow().isoformat() + 'Z'  # 'Z' indicates UTC
     # print('Getting the upcoming 10 events')\
     calendarid = g_calenderid
-    events_result = service.events().list(calendarId=calendarid, timeMin=now,
-        maxResults=10, singleEvents=True, orderBy='startTime').execute()
+    events_result = service.events().list(
+        calendarId=calendarid, timeMin=now, maxResults=10, singleEvents=True,
+        orderBy='startTime').execute()
     events = events_result.get('items', [])
 
     if not events:
@@ -81,8 +83,8 @@ def gc_time_get():
     return(datetime.datetime.strftime(end_obj, format=tmfmt))
 
 
-# Upload image to Google Drive for log
 def gdrive_upload(up_file_name):
+    """Upload image to Google Drive for log."""
     gauth = GoogleAuth()
     gauth.CommandLineAuth()
     drive = GoogleDrive(gauth)
@@ -93,17 +95,19 @@ def gdrive_upload(up_file_name):
     g_folder_id = google_conf_json["folder_id"]
     folder_id = g_folder_id
 
-    f = drive.CreateFile({'title': os.path.basename(up_file_name),
-     'mimeType': 'image/jpeg', 'parents': [{'kind': 'drive#fileLink', 'id': folder_id}]})
+    f = drive.CreateFile({
+        'title': os.path.basename(up_file_name),
+        'mimeType': 'image/jpeg',
+        'parents': [{'kind': 'drive#fileLink', 'id': folder_id}]})
     f.SetContentFile(up_file_name)
     f.Upload()
 
 
-# Write log to Google Spreadsheet
 def write_log(time_now, slack_stat):
+    """Write log to Google Spreadsheet."""
     log_time = time_now.strftime("[%Y/%m/%d %H:%M:%S]")
     unix_sec = str(time_now.timestamp())
-    log_out = log_time + ',' + slack_stat
+    # log_out = log_time + ',' + slack_stat
 
     if platform.system() == "Linux":
         creds = None
@@ -124,7 +128,7 @@ def write_log(time_now, slack_stat):
         service = discovery.build('sheets', 'v4', credentials=creds)
 
         # The ID of the spreadsheet to update.
-        spreadsheet_id = '1XuVWBl_R4twkBdgfmL6VUadcbNJX9lCsbTERUbUJMCM'  # TODO: Update placeholder value.
+        spreadsheet_id = '1XuVWBl_R4twkBdgfmL6VUadcbNJX9lCsbTERUbUJMCM'
 
         # The A1 notation of a range to search for a logical table of data.
         # Values will be appended after the last row of the table.
@@ -140,12 +144,15 @@ def write_log(time_now, slack_stat):
             # TODO: Add desired entries to the request body.
             "values": [[log_time, unix_sec, slack_stat]]
         }
-        request = service.spreadsheets().values().append(spreadsheetId=spreadsheet_id, range=range_, valueInputOption=value_input_option, insertDataOption=insert_data_option, body=value_range_body)
+        request = service.spreadsheets().values().append(
+            spreadsheetId=spreadsheet_id, range=range_,
+            valueInputOption=value_input_option,
+            insertDataOption=insert_data_option, body=value_range_body)
         request.execute()
 
 
-# Image Overay
 def overlay_icon(x, y):
+    """Image Overay."""
     global background
     hight, width, _ = icon.shape
     background[y:y + hight, x:x + width] = icon
@@ -161,7 +168,7 @@ if __name__ == '__main__':
         os.chdir('/home/pi/Projects/SlackStatusUI')
     pdirname = os.getcwd()
     dirname = os.path.join(pdirname, "data")
-    
+
     # Slack Seetings
     Slack_conf_file = os.path.join(pdirname, 'Slack_conf.json')
     with open(Slack_conf_file, 'rb') as Slack_conf:
@@ -172,7 +179,7 @@ if __name__ == '__main__':
     Slack_url_set = "https://slack.com/api/users.profile.set"
 
     while err == 0:
-        data = {"token": Slack_USER_TOKEN,"user": Slack_USER_ID}
+        data = {"token": Slack_USER_TOKEN, "user": Slack_USER_ID}
         img_file = ""
         background = np.zeros(shape=(450, 795, 3), dtype=np.uint8)
         slack_res_str = requests.get(Slack_url_get, params=data)
@@ -180,8 +187,8 @@ if __name__ == '__main__':
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
-        #dummy_stat = 'In a meeting'
-        #slack_stat = dummy_stat
+        """dummy_stat = 'In a meeting'
+        slack_stat = dummy_stat"""
 
         if slack_stat == 'Home':
             img_file = os.path.join(dirname, 'Home.png')
@@ -214,7 +221,10 @@ if __name__ == '__main__':
             text_str = 'At office'
             text_pos = (200, 270)
             font_size = 4
-            profile = {"status_text": slack_stat, "status_emoji": ":office:", "status_expiration": 0}
+            profile = {
+                "status_text": slack_stat,
+                "status_emoji": ":office:",
+                "status_expiration": 0}
             profile = json.dumps(profile)
             data["profile"] = profile
             slack_res_str = requests.post(Slack_url_set, data=data)
@@ -227,19 +237,35 @@ if __name__ == '__main__':
         icon = cv2.imread(img_file)
         overlay_icon(30, 120)
         # Write Title on image
-        ui_image = cv2.putText(background, "Kazu's status", (20, 70), cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC ,2,(200,200,200),3,cv2.LINE_AA)
+        ui_image = cv2.putText(
+            background, "Kazu's status", (20, 70),
+            cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
+            2, (200, 200, 200), 3, cv2.LINE_AA)
         # Write Titile on image
-        ui_image = cv2.putText(ui_image, "from Slack", (490, 70), cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC ,1,(200,200,200),2,cv2.LINE_AA)
+        ui_image = cv2.putText(
+            ui_image, "from Slack", (490, 70),
+            cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
+            1, (200, 200, 200), 2, cv2.LINE_AA)
         # Write Current time on image
-        ui_image = cv2.putText(ui_image, datestr, (450, 420), cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC ,0.8,(200,200,200),1,cv2.LINE_AA)
+        ui_image = cv2.putText(
+            ui_image, datestr, (450, 420),
+            cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
+            0.8, (200, 200, 200), 1, cv2.LINE_AA)
         # Write Status on image
-        ui_image = cv2.putText(ui_image, text_str, text_pos, cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC ,font_size,(200,200,200),5,cv2.LINE_AA)
+        ui_image = cv2.putText(
+            ui_image, text_str, text_pos,
+            cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
+            font_size, (200, 200, 200), 5, cv2.LINE_AA)
 
         # Write Meeting end time
         if text_str == 'Meeting':
-            slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni).strftime("~%I:%M %p")
+            slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
+            slack_exp = slack_exp.strftime("~%I:%M %p")
             meeting_end = slack_exp
-            ui_image = cv2.putText(ui_image, meeting_end, (400, 350), cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC ,2,(200,200,200),3,cv2.LINE_AA)
+            ui_image = cv2.putText(
+                ui_image, meeting_end, (400, 350),
+                cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
+                2, (200, 200, 200), 3, cv2.LINE_AA)
 
         cv2.imshow("MyStatus", ui_image)
         cv2.waitKey(1)
