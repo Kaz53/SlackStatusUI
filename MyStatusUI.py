@@ -200,6 +200,7 @@ if __name__ == '__main__':
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
+        slack_stat = 'At FXGI'
 
         if slack_stat == 'Home':
             img_file = os.path.join(dirname, 'Home.png')
@@ -231,6 +232,11 @@ if __name__ == '__main__':
             text_str = 'Out of office'
             text_pos = (220, 270)
             font_size = 2.5
+        elif slack_stat == 'At FXGI':
+            img_file = os.path.join(dirname, 'Work.png')
+            text_str = 'At FXGI'
+            text_pos = (200, 270)
+            font_size = 4
         else:
             slack_stat = 'At work'
             img_file = os.path.join(dirname, 'Work.png')
@@ -285,7 +291,7 @@ if __name__ == '__main__':
             font_size, (200, 200, 200), 5, cv2.LINE_AA)
 
         # Write Meeting end time
-        if text_str == 'Meeting' or text_str == 'Out of office':
+        if text_str == 'Meeting' or text_str == 'Out of office' or text_str == 'At FXGI':
             slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
             slack_exp = slack_exp.strftime("~%I:%M %p")
             meeting_end = slack_exp
