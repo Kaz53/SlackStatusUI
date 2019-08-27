@@ -151,12 +151,24 @@ def write_log(time_now, slack_stat):
         request.execute()
 
 
-def overlay_icon(x, y):
+def overlay_icon(x, y, icon):
     """Image Overay."""
     global background
     hight, width, _ = icon.shape
     background[y:y + hight, x:x + width] = icon
 
+
+def overlay_icon2(x, y, icon):
+    """Image Overay2."""
+    global background
+    hight, width, _ = icon.shape
+    mask = icon[:, :, 3]
+    mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
+    # mask = mask / 255.0
+    icon = icon[:, :, :3]
+
+    background[y:y + hight, x:x + width] *= 1 - mask
+    background[y:y + hight, x:x + width] += icon + mask
 
 # Main Program
 if __name__ == '__main__':
@@ -177,11 +189,12 @@ if __name__ == '__main__':
     Slack_USER_ID = Slack_conf_json['Slack_USER_ID']
     Slack_url_get = "https://slack.com/api/users.profile.get"
     Slack_url_set = "https://slack.com/api/users.profile.set"
+    PAL_logo_file = os.path.join(dirname, 'FXPAL.png')
+    FX_logo_file = os.path.join(dirname, "FX.png")
 
     while err == 0:
         data = {"token": Slack_USER_TOKEN, "user": Slack_USER_ID}
         img_file = ""
-        background = np.zeros(shape=(450, 795, 3), dtype=np.uint8)
         slack_res_str = requests.get(Slack_url_get, params=data)
         slack_json = slack_res_str.json()
         slack_stat = slack_json['profile']['status_text']
@@ -211,15 +224,15 @@ if __name__ == '__main__':
         elif slack_stat == 'Lunch':
             img_file = os.path.join(dirname, 'lunch.png')
             text_str = 'Lunch'
-            text_pos = (300, 270)
-            font_size = 3
+            text_pos = (200, 270)
+            font_size = 4
         elif slack_stat == 'Out of office':
             img_file = os.path.join(dirname, 'bluecar.png')
             text_str = 'Out of office'
             text_pos = (220, 270)
             font_size = 2.5
         else:
-            slack_stat == 'At work'
+            slack_stat = 'At work'
             img_file = os.path.join(dirname, 'Work.png')
             text_str = 'At office'
             text_pos = (200, 270)
@@ -237,18 +250,29 @@ if __name__ == '__main__':
             print(img_file)
             print('error no ICON file')
 
-        icon = cv2.imread(img_file)
-        overlay_icon(30, 120)
+        # Overlay Logo
+        background = np.zeros(shape=(450, 795, 3), dtype=np.uint8)
+        # icon = cv2.imread(FX_logo_file, cv2.IMREAD_UNCHANGED)
+        # overlay_icon2(10, 330, icon)
+        background = background[:, :, :3]
+        icon = cv2.imread(PAL_logo_file)
+        overlay_icon(30, 10, icon)
+
         # Write Title on image
         ui_image = cv2.putText(
-            background, "Kazu's status", (20, 70),
+            background, "Kazu's status", (150, 70),
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
-            2, (200, 200, 200), 3, cv2.LINE_AA)
+            2.5, (200, 200, 200), 3, cv2.LINE_AA)
         # Write Titile on image
         ui_image = cv2.putText(
-            ui_image, "from Slack", (490, 70),
+            ui_image, "from Slack", (570, 110),
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
             1, (200, 200, 200), 2, cv2.LINE_AA)
+
+        # Overlay ICON
+        icon = cv2.imread(img_file)
+        overlay_icon(30, 120, icon)
+
         # Write Current time on image
         ui_image = cv2.putText(
             ui_image, datestr, (450, 420),
