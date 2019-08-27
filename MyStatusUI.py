@@ -200,7 +200,7 @@ if __name__ == '__main__':
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
-        slack_stat = 'At FXGI'
+        # slack_stat = 'At FXGI'
 
         if slack_stat == 'Home':
             img_file = os.path.join(dirname, 'Home.png')
