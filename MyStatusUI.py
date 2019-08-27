@@ -243,7 +243,7 @@ if __name__ == '__main__':
                 "status_expiration": 0}
             profile = json.dumps(profile)
             data["profile"] = profile
-            slack_res_str = requests.post(Slack_url_set, data=data)
+            slack_res_str_post = requests.post(Slack_url_set, data=data)
 
         if os.path.exists(img_file) is False:
             print(slack_stat)
