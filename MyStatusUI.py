@@ -189,6 +189,8 @@ if __name__ == '__main__':
     Slack_USER_ID = Slack_conf_json['Slack_USER_ID']
     Slack_url_get = "https://slack.com/api/users.profile.get"
     Slack_url_set = "https://slack.com/api/users.profile.set"
+
+    # Logo files load
     PAL_logo_file = os.path.join(dirname, 'FXPAL.png')
     FX_logo_file = os.path.join(dirname, "FX.png")
 
@@ -315,7 +317,7 @@ if __name__ == '__main__':
                 os.remove(file)
 
         # Write image and log for history when change status
-        if slack_stat != slack_stat_old:
+        if slack_stat != slack_stat_old or slack_stat == "":
             save_file_dir = os.path.join(pdirname, 'log')
             time_now = datetime.datetime.now()
             time_now_str = time_now.strftime("%m%d%H%M%S")
