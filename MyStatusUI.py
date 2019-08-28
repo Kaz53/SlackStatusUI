@@ -202,7 +202,7 @@ if __name__ == '__main__':
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
-        # slack_stat = 'At FXGI'
+        print(slack_stat)
 
         if slack_stat == 'Home':
             img_file = os.path.join(dirname, 'Home.png')
@@ -239,7 +239,7 @@ if __name__ == '__main__':
             text_str = 'At FXGI'
             text_pos = (200, 270)
             font_size = 4
-        else:
+        elif slack_stat == "":
             slack_stat = 'At work'
             img_file = os.path.join(dirname, 'Work.png')
             text_str = 'At office'
