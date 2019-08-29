@@ -192,6 +192,10 @@ if __name__ == '__main__':
     Slack_url_get = "https://slack.com/api/users.profile.get"
     Slack_url_set = "https://slack.com/api/users.profile.set"
 
+<<<<<<< HEAD
+=======
+    # Logo files load
+>>>>>>> 8815b1adb14c752fff5982ad83f12e4e42d8622a
     PAL_logo_file = os.path.join(dirname, 'FXPAL.png')
     FX_logo_file = os.path.join(dirname, "FX.png")
 
@@ -203,6 +207,10 @@ if __name__ == '__main__':
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
+<<<<<<< HEAD
+=======
+        print(slack_stat)
+>>>>>>> 8815b1adb14c752fff5982ad83f12e4e42d8622a
 
         # slack_stat = 'At FXGI'
         if slack_stat == 'Home':
@@ -240,7 +248,7 @@ if __name__ == '__main__':
             text_str = 'At FXGI'
             text_pos = (200, 270)
             font_size = 4
-        else:
+        elif slack_stat == "":
             slack_stat = 'At work'
             img_file = os.path.join(dirname, 'Work.png')
             text_str = 'At office'
@@ -318,7 +326,7 @@ if __name__ == '__main__':
                 os.remove(file)
 
         # Write image and log for history when change status
-        if slack_stat != slack_stat_old:
+        if slack_stat != slack_stat_old or slack_stat == "":
             save_file_dir = os.path.join(pdirname, 'log')
             time_now = datetime.datetime.now()
             time_now_str = time_now.strftime("%m%d%H%M%S")
