@@ -151,7 +151,6 @@ def write_log(time_now, slack_stat):
         request.execute()
 
 
-
 def overlay_icon(x, y, icon):
     """Image Overay."""
     global background
@@ -192,10 +191,7 @@ if __name__ == '__main__':
     Slack_url_get = "https://slack.com/api/users.profile.get"
     Slack_url_set = "https://slack.com/api/users.profile.set"
 
-<<<<<<< HEAD
-=======
     # Logo files load
->>>>>>> 8815b1adb14c752fff5982ad83f12e4e42d8622a
     PAL_logo_file = os.path.join(dirname, 'FXPAL.png')
     FX_logo_file = os.path.join(dirname, "FX.png")
 
@@ -207,10 +203,6 @@ if __name__ == '__main__':
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
-<<<<<<< HEAD
-=======
-        print(slack_stat)
->>>>>>> 8815b1adb14c752fff5982ad83f12e4e42d8622a
 
         # slack_stat = 'At FXGI'
         if slack_stat == 'Home':
