@@ -108,10 +108,13 @@ def write_log(time_now, slack_stat, slack_exp_uni):
     log_time = time_now.strftime("[%Y/%m/%d %H:%M:%S]")
     unix_sec = str(time_now.timestamp())
     if slack_exp_uni == 0:
-        slack_dur = 0
+        slack_dur_sec = 0
+        slack_dur_min = 0
     else:
         slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
-        slack_dur = (slack_exp - time_now).total_seconds()
+        slack_dur_sec = (slack_exp - time_now).total_seconds()
+        slack_dur_min = slack_dur_sec / 60
+        slack_dur_min = round(slack_dur_min, 0)
 
     if platform.system() == "Linux":
         creds = None
@@ -146,7 +149,7 @@ def write_log(time_now, slack_stat, slack_exp_uni):
 
         value_range_body = {
             # TODO: Add desired entries to the request body.
-            "values": [[log_time, unix_sec, slack_stat, slack_dur]]
+            "values": [[log_time, unix_sec, slack_stat, slack_dur_min]]
         }
         request = service.spreadsheets().values().append(
             spreadsheetId=spreadsheet_id, range=range_,
