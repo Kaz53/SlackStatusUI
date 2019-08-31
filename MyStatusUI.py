@@ -135,7 +135,10 @@ def write_log(time_now, slack_stat, slack_exp_uni):
         service = discovery.build('sheets', 'v4', credentials=creds)
 
         # The ID of the spreadsheet to update.
-        spreadsheet_id = '1XuVWBl_R4twkBdgfmL6VUadcbNJX9lCsbTERUbUJMCM'
+        google_conf_file = os.path.join(pdirname, 'Google_setting.json')
+        with open(google_conf_file, 'rb') as google_conf:
+            google_conf_json = json.load(google_conf)
+        spreadsheet_id = google_conf_json["spreadsheet_id"]
 
         # The A1 notation of a range to search for a logical table of data.
         # Values will be appended after the last row of the table.
