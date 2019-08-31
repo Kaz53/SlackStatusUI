@@ -271,8 +271,6 @@ if __name__ == '__main__':
 
         # Overlay Logo
         background = np.zeros(shape=(450, 795, 3), dtype=np.uint8)
-        # icon = cv2.imread(FX_logo_file, cv2.IMREAD_UNCHANGED)
-        # overlay_icon2(10, 330, icon)
         background = background[:, :, :3]
         icon = cv2.imread(PAL_logo_file)
         overlay_icon(30, 10, icon)
