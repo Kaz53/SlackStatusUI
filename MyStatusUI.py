@@ -274,7 +274,7 @@ if __name__ == '__main__':
             print('error no ICON file')
 
         # Overlay Logo
-        background = np.zeros(shape=(450, 795, 3), dtype=np.uint8)
+        background = np.zeros(shape=(450, 800, 3), dtype=np.uint8)
         background[:120, :, :] = 70
         background[390:, :, :] = 70
         icon = cv2.imread(PAL_logo_file)
@@ -323,7 +323,7 @@ if __name__ == '__main__':
         # Initial image position adjustment
         if cnt == 0:
             cv2.waitKey(1000)
-            cv2.moveWindow("MyStatus", 0, -5)
+            cv2.moveWindow("MyStatus", -3, -30)
             cv2.imshow("MyStatus", ui_image)
             cv2.waitKey(1)
 
