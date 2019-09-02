@@ -169,19 +169,6 @@ def overlay_icon(x, y, icon):
     background[y:y + hight, x:x + width] = icon
 
 
-def overlay_icon2(x, y, icon):
-    """Image Overay2."""
-    global background
-    hight, width, _ = icon.shape
-    mask = icon[:, :, 3]
-    mask = cv2.cvtColor(mask, cv2.COLOR_GRAY2BGR)
-    # mask = mask / 255.0
-    icon = icon[:, :, :3]
-
-    background[y:y + hight, x:x + width] *= 1 - mask
-    background[y:y + hight, x:x + width] += icon + mask
-
-
 # Main Program
 if __name__ == '__main__':
     err = 0
@@ -204,7 +191,6 @@ if __name__ == '__main__':
 
     # Logo files load
     PAL_logo_file = os.path.join(dirname, 'FXPAL.png')
-    FX_logo_file = os.path.join(dirname, "FX.png")
 
     while err == 0:
         data = {"token": Slack_USER_TOKEN, "user": Slack_USER_ID}
