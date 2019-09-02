@@ -203,7 +203,7 @@ if __name__ == '__main__':
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
 
-        # slack_stat = 'Trip'
+        # slack_stat = 'In a meeting'
         if slack_stat == 'Home':
             img_file = os.path.join(dirname, 'Home.png')
             text_str = 'At home'
@@ -274,9 +274,9 @@ if __name__ == '__main__':
             print('error no ICON file')
 
         # Overlay Logo
-        background = np.zeros(shape=(450, 800, 3), dtype=np.uint8)
+        background = np.zeros(shape=(480, 810, 3), dtype=np.uint8)
         background[:120, :, :] = 70
-        background[390:, :, :] = 70
+        background[410:, :, :] = 70
         icon = cv2.imread(PAL_logo_file)
         overlay_icon(30, 10, icon)
 
@@ -297,7 +297,7 @@ if __name__ == '__main__':
 
         # Write Current time on image
         ui_image = cv2.putText(
-            ui_image, datestr, (450, 420),
+            ui_image, datestr, (450, 450),
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
             0.8, (150, 150, 150), 1, cv2.LINE_AA)
 
