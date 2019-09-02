@@ -214,7 +214,7 @@ if __name__ == '__main__':
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
 
-        # slack_stat = 'At FXGI'
+        # slack_stat = 'Absence'
         if slack_stat == 'Home':
             img_file = os.path.join(dirname, 'Home.png')
             text_str = 'At home'
@@ -249,6 +249,21 @@ if __name__ == '__main__':
             img_file = os.path.join(dirname, 'Work.png')
             text_str = 'At FXGI'
             text_pos = (200, 270)
+            font_size = 4
+        elif slack_stat == 'Working remotely':
+            img_file = os.path.join(dirname, 'computer.png')
+            text_str = 'Working remotely'
+            text_pos = (200, 270)
+            font_size = 2
+        elif slack_stat == 'Absence':
+            img_file = os.path.join(dirname, 'absence.png')
+            text_str = 'Absence'
+            text_pos = (200, 270)
+            font_size = 4
+        elif slack_stat == 'Trip':
+            img_file = os.path.join(dirname, 'trip.png')
+            text_str = 'Trip'
+            text_pos = (250, 270)
             font_size = 4
         elif slack_stat == "":
             slack_stat = 'At work'
@@ -301,14 +316,15 @@ if __name__ == '__main__':
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
             font_size, (200, 200, 200), 5, cv2.LINE_AA)
 
-        # Write Meeting end time
-        if text_str in ['Meeting', 'Out of office', 'At FXGI']:
-            slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
-            slack_end = slack_exp.strftime("~%I:%M %p")
-            ui_image = cv2.putText(
-                ui_image, slack_end, (400, 350),
-                cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
-                2, (200, 200, 200), 3, cv2.LINE_AA)
+        # Write end time
+        if text_str in ['Meeting', 'Out of office', 'At FXGI', 'Absence']:
+            if slack_exp_uni != 0:
+                slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
+                slack_end = slack_exp.strftime("~%I:%M %p")
+                ui_image = cv2.putText(
+                    ui_image, slack_end, (400, 350),
+                    cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
+                    2, (200, 200, 200), 3, cv2.LINE_AA)
 
         cv2.imshow("MyStatus", ui_image)
         cv2.waitKey(1)
