@@ -85,6 +85,7 @@ def gc_time_get():
 
 def gdrive_upload(up_file_name):
     """Upload image to Google Drive for log."""
+    """ Only for Linux"""
     gauth = GoogleAuth()
     gauth.CommandLineAuth()
     drive = GoogleDrive(gauth)
@@ -105,6 +106,7 @@ def gdrive_upload(up_file_name):
 
 def write_log(time_now, slack_stat, slack_exp_uni):
     """Write log to Google Spreadsheet."""
+    """Only for Linux"""
     log_time = time_now.strftime("[%Y/%m/%d %H:%M:%S]")
     unix_sec = str(time_now.timestamp())
     if slack_exp_uni == 0:
@@ -116,49 +118,48 @@ def write_log(time_now, slack_stat, slack_exp_uni):
         slack_dur_min = slack_dur_sec / 60
         slack_dur_min = round(slack_dur_min, 0)
 
-    if platform.system() == "Linux":
-        creds = None
-        gc_scopes = 'https://www.googleapis.com/auth/spreadsheets'
-        if os.path.exists('token_gs.pickle'):
-            with open('token_gs.pickle', 'rb') as token:
-                creds = pickle.load(token)
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    'credentials.json', gc_scopes)
-                creds = flow.run_local_server(port=0)
-            # Save the credentials for the next run
-            with open('token_gs.pickle', 'wb') as token:
-                pickle.dump(creds, token)
-        service = discovery.build('sheets', 'v4', credentials=creds)
+    creds = None
+    gc_scopes = 'https://www.googleapis.com/auth/spreadsheets'
+    if os.path.exists('token_gs.pickle'):
+        with open('token_gs.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', gc_scopes)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token_gs.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+    service = discovery.build('sheets', 'v4', credentials=creds)
 
-        # The ID of the spreadsheet to update.
-        google_conf_file = os.path.join(pdirname, 'Google_setting.json')
-        with open(google_conf_file, 'rb') as google_conf:
-            google_conf_json = json.load(google_conf)
-        spreadsheet_id = google_conf_json["spreadsheet_id"]
+    # The ID of the spreadsheet to update.
+    google_conf_file = os.path.join(pdirname, 'Google_setting.json')
+    with open(google_conf_file, 'rb') as google_conf:
+        google_conf_json = json.load(google_conf)
+    spreadsheet_id = google_conf_json["spreadsheet_id"]
 
-        # The A1 notation of a range to search for a logical table of data.
-        # Values will be appended after the last row of the table.
-        range_ = 'log_area'  # TODO: Update placeholder value.
+    # The A1 notation of a range to search for a logical table of data.
+    # Values will be appended after the last row of the table.
+    range_ = 'log_area'  # TODO: Update placeholder value.
 
-        # How the input data should be interpreted.
-        value_input_option = 'RAW'  # TODO: Update placeholder value.
+    # How the input data should be interpreted.
+    value_input_option = 'RAW'  # TODO: Update placeholder value.
 
-        # How the input data should be inserted.
-        insert_data_option = 'INSERT_ROWS'  # TODO: Update placeholder value.
+    # How the input data should be inserted.
+    insert_data_option = 'INSERT_ROWS'  # TODO: Update placeholder value.
 
-        value_range_body = {
-            # TODO: Add desired entries to the request body.
-            "values": [[log_time, unix_sec, slack_stat, slack_dur_min]]
-        }
-        request = service.spreadsheets().values().append(
-            spreadsheetId=spreadsheet_id, range=range_,
-            valueInputOption=value_input_option,
-            insertDataOption=insert_data_option, body=value_range_body)
-        request.execute()
+    value_range_body = {
+        # TODO: Add desired entries to the request body.
+        "values": [[log_time, unix_sec, slack_stat, slack_dur_min]]
+    }
+    request = service.spreadsheets().values().append(
+        spreadsheetId=spreadsheet_id, range=range_,
+        valueInputOption=value_input_option,
+        insertDataOption=insert_data_option, body=value_range_body)
+    request.execute()
 
 
 def overlay_icon(x, y, icon):
@@ -214,7 +215,7 @@ if __name__ == '__main__':
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
 
-        # slack_stat = 'Absence'
+        slack_stat = 'Trip'
         if slack_stat == 'Home':
             img_file = os.path.join(dirname, 'Home.png')
             text_str = 'At home'
@@ -238,7 +239,7 @@ if __name__ == '__main__':
         elif slack_stat == 'Lunch':
             img_file = os.path.join(dirname, 'lunch.png')
             text_str = 'Lunch'
-            text_pos = (200, 270)
+            text_pos = (230, 270)
             font_size = 4
         elif slack_stat == 'Out of office':
             img_file = os.path.join(dirname, 'bluecar.png')
@@ -263,7 +264,7 @@ if __name__ == '__main__':
         elif slack_stat == 'Trip':
             img_file = os.path.join(dirname, 'trip.png')
             text_str = 'Trip'
-            text_pos = (250, 270)
+            text_pos = (280, 270)
             font_size = 4
         elif slack_stat == "":
             slack_stat = 'At work'
@@ -286,7 +287,8 @@ if __name__ == '__main__':
 
         # Overlay Logo
         background = np.zeros(shape=(450, 795, 3), dtype=np.uint8)
-        background = background[:, :, :3]
+        background[:120, :, :] = 70
+        background[390:, :, :] = 70
         icon = cv2.imread(PAL_logo_file)
         overlay_icon(30, 10, icon)
 
@@ -299,7 +301,7 @@ if __name__ == '__main__':
         ui_image = cv2.putText(
             ui_image, "from Slack", (570, 110),
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
-            1, (200, 200, 200), 2, cv2.LINE_AA)
+            1, (150, 150, 150), 2, cv2.LINE_AA)
 
         # Overlay ICON
         icon = cv2.imread(img_file)
@@ -309,7 +311,8 @@ if __name__ == '__main__':
         ui_image = cv2.putText(
             ui_image, datestr, (450, 420),
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
-            0.8, (200, 200, 200), 1, cv2.LINE_AA)
+            0.8, (150, 150, 150), 1, cv2.LINE_AA)
+
         # Write Status on image
         ui_image = cv2.putText(
             ui_image, text_str, text_pos,
@@ -348,15 +351,19 @@ if __name__ == '__main__':
             save_file_name = time_now_str + "_" + slack_stat + ".jpg"
             save_file_name = os.path.join(save_file_dir, save_file_name)
             cv2.imwrite(save_file_name, ui_image)
-            gdrive_upload(save_file_name)
-            write_log(time_now, slack_stat, slack_exp_uni)
+            if platform.system() == "Linux":
+                gdrive_upload(save_file_name)
+                write_log(time_now, slack_stat, slack_exp_uni)
 
         # Wait 20sec
         time.sleep(20)
         slack_stat_old = slack_stat
 
         cnt += 1
-        if cnt == 10000:
+        time_now = datetime.datetime.now()
+        hourstr = time_now.strftime("%H")
+        minstr = time_now.strftime("%M")
+        if int(hourstr) >= 22 and int(minstr) >= 40:
             break
 
 cv2.waitKey(10)
