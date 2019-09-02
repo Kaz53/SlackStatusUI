@@ -110,7 +110,7 @@ def write_log(time_now, slack_stat, slack_exp_uni):
     """Only for Linux"""
     log_time = time_now.strftime("[%Y/%m/%d %H:%M:%S]")
     unix_sec = str(time_now.timestamp())
-    ip = ipget.ipget.ipaddr("wlan0")
+    ip = ipget.ipget().ipaddr("wlan0")
     if slack_exp_uni == 0:
         slack_dur_sec = 0
         slack_dur_min = 0
