@@ -215,7 +215,7 @@ if __name__ == '__main__':
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
 
-        slack_stat = 'Trip'
+        # slack_stat = 'Trip'
         if slack_stat == 'Home':
             img_file = os.path.join(dirname, 'Home.png')
             text_str = 'At home'
