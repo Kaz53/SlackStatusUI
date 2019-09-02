@@ -16,6 +16,7 @@ from googleapiclient import discovery
 import glob
 import time
 import json
+import socket
 
 
 def gc_time_get():
@@ -109,6 +110,8 @@ def write_log(time_now, slack_stat, slack_exp_uni):
     """Only for Linux"""
     log_time = time_now.strftime("[%Y/%m/%d %H:%M:%S]")
     unix_sec = str(time_now.timestamp())
+    host = socket.gethostname()
+    ip = socket.gethostbyname(host)
     if slack_exp_uni == 0:
         slack_dur_sec = 0
         slack_dur_min = 0
@@ -153,7 +156,7 @@ def write_log(time_now, slack_stat, slack_exp_uni):
 
     value_range_body = {
         # TODO: Add desired entries to the request body.
-        "values": [[log_time, unix_sec, slack_stat, slack_dur_min]]
+        "values": [[log_time, unix_sec, slack_stat, slack_dur_min, ip]]
     }
     request = service.spreadsheets().values().append(
         spreadsheetId=spreadsheet_id, range=range_,
