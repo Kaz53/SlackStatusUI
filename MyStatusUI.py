@@ -105,9 +105,10 @@ def gdrive_upload(up_file_name):
     f.Upload()
 
 
-def write_log(time_now, slack_stat, slack_exp_uni):
+def write_log(slack_stat, slack_exp_uni):
     """Write log to Google Spreadsheet."""
     """Only for Linux"""
+    time_now = datetime.datetime.now()
     log_time = time_now.strftime("[%Y/%m/%d %H:%M:%S]")
     unix_sec = str(time_now.timestamp())
     ip = ipget.ipget().ipaddr("wlan0")
@@ -333,6 +334,7 @@ if __name__ == '__main__':
 
         # Write image and log for history when change status
         if slack_stat != slack_stat_old or slack_stat_old == "":
+            # Save image as local log
             save_file_dir = os.path.join(pdirname, 'log')
             time_now = datetime.datetime.now()
             time_now_str = time_now.strftime("%m%d%H%M%S")
@@ -340,8 +342,10 @@ if __name__ == '__main__':
             save_file_name = os.path.join(save_file_dir, save_file_name)
             cv2.imwrite(save_file_name, ui_image)
             if platform.system() == "Linux":
+                # Upload image to GoogleDrive
                 gdrive_upload(save_file_name)
-                write_log(time_now, slack_stat, slack_exp_uni)
+                # Save log
+                write_log(slack_stat, slack_exp_uni)
 
         # Wait 20sec
         time.sleep(20)
