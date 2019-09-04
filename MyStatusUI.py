@@ -204,62 +204,64 @@ if __name__ == '__main__':
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
 
-        # slack_stat = 'In a meeting'
+        # slack_stat = 'Lunch'
+        text_pos_x = 200
+        text_pos_y = 290
         if slack_stat == 'Home':
             img_file = os.path.join(dirname, 'Home.png')
             text_str = 'At home'
-            text_pos = (200, 270)
+            text_pos = (text_pos_x, text_pos_y)
             font_size = 4
         elif slack_stat == 'At work':
             img_file = os.path.join(dirname, 'Work.png')
             text_str = 'At office'
-            text_pos = (200, 270)
+            text_pos = (text_pos_x, text_pos_y)
             font_size = 4
         elif slack_stat == 'Commuting':
             img_file = os.path.join(dirname, 'Commuting.png')
             text_str = 'Commuting'
-            text_pos = (200, 270)
+            text_pos = (text_pos_x, text_pos_y)
             font_size = 3
         elif slack_stat == 'In a meeting':
             img_file = os.path.join(dirname, 'Meeting.png')
             text_str = 'Meeting'
-            text_pos = (200, 250)
+            text_pos = (text_pos_x, text_pos_y - 20)
             font_size = 4
         elif slack_stat == 'Lunch':
             img_file = os.path.join(dirname, 'lunch.png')
             text_str = 'Lunch'
-            text_pos = (230, 270)
+            text_pos = (text_pos_x + 30, text_pos_y)
             font_size = 4
         elif slack_stat == 'Out of office':
             img_file = os.path.join(dirname, 'bluecar.png')
             text_str = 'Out of office'
-            text_pos = (220, 270)
+            text_pos = (text_pos_x + 20, text_pos_y)
             font_size = 2.5
         elif slack_stat == 'At FXGI':
             img_file = os.path.join(dirname, 'Work.png')
             text_str = 'At FXGI'
-            text_pos = (200, 270)
+            text_pos = (text_pos_x, text_pos_y)
             font_size = 4
         elif slack_stat == 'Working remotely':
             img_file = os.path.join(dirname, 'computer.png')
             text_str = 'Working remotely'
-            text_pos = (200, 270)
+            text_pos = (text_pos_x, text_pos_y)
             font_size = 2
         elif slack_stat == 'Absence':
             img_file = os.path.join(dirname, 'absence.png')
             text_str = 'Absence'
-            text_pos = (200, 270)
+            text_pos = (text_pos_x, text_pos_y)
             font_size = 4
         elif slack_stat == 'Trip':
             img_file = os.path.join(dirname, 'trip.png')
             text_str = 'Trip'
-            text_pos = (280, 270)
+            text_pos = (text_pos_x + 80, text_pos_y)
             font_size = 4
         elif slack_stat == "":
             slack_stat = 'At work'
             img_file = os.path.join(dirname, 'Work.png')
             text_str = 'At office'
-            text_pos = (200, 270)
+            text_pos = (text_pos_x, text_pos_y)
             font_size = 4
             profile = {
                 "status_text": slack_stat,
@@ -294,7 +296,7 @@ if __name__ == '__main__':
 
         # Overlay ICON
         icon = cv2.imread(img_file)
-        overlay_icon(30, 120, icon)
+        overlay_icon(30, 140, icon)
 
         # Write Current time on image
         ui_image = cv2.putText(
@@ -314,7 +316,7 @@ if __name__ == '__main__':
                 slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
                 slack_end = slack_exp.strftime("~%I:%M %p")
                 ui_image = cv2.putText(
-                    ui_image, slack_end, (400, 350),
+                    ui_image, slack_end, (400, 370),
                     cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
                     2, (200, 200, 200), 3, cv2.LINE_AA)
 
