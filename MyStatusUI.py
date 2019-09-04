@@ -200,6 +200,10 @@ if __name__ == '__main__':
         img_file = ""
         slack_res_str = requests.get(Slack_url_get, params=data)
         slack_json = slack_res_str.json()
+        while slack_json['ok'] == 'True':
+            time.sleep(30)
+            slack_res_str = requests.get(Slack_url_get, params=data)
+            slack_json = slack_res_str.json()
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
@@ -288,6 +292,7 @@ if __name__ == '__main__':
             background, "Kazu's status", (150, 70),
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
             2.5, (200, 200, 200), 3, cv2.LINE_AA)
+
         # Write Titile on image
         ui_image = cv2.putText(
             ui_image, "from Slack", (570, 110),
