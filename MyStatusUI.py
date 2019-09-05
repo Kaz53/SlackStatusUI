@@ -172,6 +172,20 @@ def overlay_icon(x, y, icon):
     background[y:y + hight, x:x + width] = icon
 
 
+def log_output(pdirname, ui_image, slack_stat, slack_exp_uni):
+    """Save image as local log."""
+    save_file_dir = os.path.join(pdirname, 'log')
+    time_now = datetime.datetime.now()
+    time_now_str = time_now.strftime("%m%d%H%M%S")
+    save_file_name = time_now_str + "_" + slack_stat + ".jpg"
+    save_file_name = os.path.join(save_file_dir, save_file_name)
+    cv2.imwrite(save_file_name, ui_image)
+    if platform.system() == "Linux":
+        # Upload image to GoogleDrive
+        gdrive_upload(save_file_name)
+        # Save log
+        write_log(slack_stat, slack_exp_uni)
+
 # Main Program
 if __name__ == '__main__':
     err = 0
@@ -341,18 +355,7 @@ if __name__ == '__main__':
 
         # Write image and log for history when change status
         if slack_stat != slack_stat_old or slack_stat_old == "":
-            # Save image as local log
-            save_file_dir = os.path.join(pdirname, 'log')
-            time_now = datetime.datetime.now()
-            time_now_str = time_now.strftime("%m%d%H%M%S")
-            save_file_name = time_now_str + "_" + slack_stat + ".jpg"
-            save_file_name = os.path.join(save_file_dir, save_file_name)
-            cv2.imwrite(save_file_name, ui_image)
-            if platform.system() == "Linux":
-                # Upload image to GoogleDrive
-                gdrive_upload(save_file_name)
-                # Save log
-                write_log(slack_stat, slack_exp_uni)
+            log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
 
         # Wait 20sec
         time.sleep(20)
@@ -363,6 +366,7 @@ if __name__ == '__main__':
         hourstr = time_now.strftime("%H")
         minstr = time_now.strftime("%M")
         if int(hourstr) >= 22 and int(minstr) >= 40:
+            log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
             break
 
 cv2.waitKey(10)
