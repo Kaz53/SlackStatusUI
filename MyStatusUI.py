@@ -352,6 +352,7 @@ if __name__ == '__main__':
             file_list = glob.glob("./log/*jpg")
             for file in file_list:
                 os.remove(file)
+            log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
 
         # Write image and log for history when change status
         if slack_stat != slack_stat_old or slack_stat_old == "":
