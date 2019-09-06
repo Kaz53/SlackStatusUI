@@ -119,7 +119,7 @@ def write_log(slack_stat, slack_exp_uni):
         slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
         slack_dur_sec = (slack_exp - time_now).total_seconds()
         slack_dur_min = slack_dur_sec / 60
-        slack_dur_min = round(slack_dur_min, 0)
+        slack_dur_min = round(slack_dur_min / 10, 0) * 10
 
     creds = None
     gc_scopes = 'https://www.googleapis.com/auth/spreadsheets'
