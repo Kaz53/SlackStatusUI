@@ -180,6 +180,7 @@ def log_output(pdirname, ui_image, slack_stat, slack_exp_uni):
     save_file_name = time_now_str + "_" + slack_stat + ".jpg"
     save_file_name = os.path.join(save_file_dir, save_file_name)
     cv2.imwrite(save_file_name, ui_image)
+    print("log time:", time_now_str)
     if platform.system() == "Linux":
         # Upload image to GoogleDrive
         gdrive_upload(save_file_name)
@@ -352,7 +353,6 @@ if __name__ == '__main__':
             file_list = glob.glob("./log/*jpg")
             for file in file_list:
                 os.remove(file)
-            log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
 
         # Write image and log for history when change status
         if slack_stat != slack_stat_old or slack_stat_old == "":
@@ -366,6 +366,7 @@ if __name__ == '__main__':
         time_now = datetime.datetime.now()
         hourstr = time_now.strftime("%H")
         minstr = time_now.strftime("%M")
+        print("Current Time:", "hourstr", ":", "minstr")
         if int(hourstr) >= 22 and int(minstr) >= 40:
             log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
             break
