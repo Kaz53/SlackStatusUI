@@ -366,7 +366,7 @@ if __name__ == '__main__':
         time_now = datetime.datetime.now()
         hourstr = time_now.strftime("%H")
         minstr = time_now.strftime("%M")
-        print("Current Time:", "hourstr", ":", "minstr")
+        print("Current Time:", hourstr, ":", minstr)
         if int(hourstr) >= 22 and int(minstr) >= 40:
             log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
             break
