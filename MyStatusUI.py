@@ -222,6 +222,8 @@ if __name__ == '__main__':
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
 
+        print(cnt, datestr, ":[new]-", slack_stat, "[old]-", slack_stat_old)
+
         # slack_stat = 'Lunch'
         text_pos_x = 200
         text_pos_y = 290
@@ -331,6 +333,7 @@ if __name__ == '__main__':
 
         # Write end time
         if text_str in ['Meeting', 'Out of office', 'At FXGI', 'Absence']:
+            print(slack_exp_uni)
             if slack_exp_uni != 0:
                 slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
                 slack_end = slack_exp.strftime("~%I:%M %p")
