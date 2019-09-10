@@ -205,6 +205,7 @@ if __name__ == '__main__':
     Slack_USER_ID = Slack_conf_json['Slack_USER_ID']
     Slack_url_get = "https://slack.com/api/users.profile.get"
     Slack_url_set = "https://slack.com/api/users.profile.set"
+    timeout_time = (3.0, 7.5)
 
     # Logo files load
     PAL_logo_file = os.path.join(dirname, 'FXPAL.png')
@@ -212,12 +213,14 @@ if __name__ == '__main__':
     while err == 0:
         data = {"token": Slack_USER_TOKEN, "user": Slack_USER_ID}
         img_file = ""
-        slack_res_str = requests.get(Slack_url_get, params=data)
-        slack_json = slack_res_str.json()
-        while slack_json['ok'] == 'True':
+        try:
+            slack_res_str = requests.get(
+                Slack_url_get, params=data, timeout=timeout_time)
+        except Timeout:
             time.sleep(30)
-            slack_res_str = requests.get(Slack_url_get, params=data)
-            slack_json = slack_res_str.json()
+            slack_res_str = requests.get(
+                Slack_url_get, params=data, timeout=timeout_time)
+        slack_json = slack_res_str.json()
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
@@ -289,7 +292,8 @@ if __name__ == '__main__':
                 "status_expiration": 0}
             profile = json.dumps(profile)
             data["profile"] = profile
-            slack_res_str_post = requests.post(Slack_url_set, data=data)
+            slack_res_str_post = requests.post(
+                Slack_url_set, data=data, timeout=timeout_time)
 
         if os.path.exists(img_file) is False:
             print(slack_stat)
