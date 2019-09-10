@@ -1,5 +1,6 @@
 """Showing status from Slack profile."""
 import requests
+import requests.exceptions as Timeout
 import os.path
 import cv2
 import datetime
