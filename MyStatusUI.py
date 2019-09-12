@@ -192,7 +192,7 @@ def log_output(pdirname, ui_image, slack_stat, slack_exp_uni):
 def post_slack(slack_kazu_url, slack_stat, slack_stat_old):
     """Post message in Kazu channel."""
     slack = slackweb.Slack(url=slack_kazu_url)
-    body = "Changed to " + slack_stat + " from " + slack_stat_old
+    body = "Changed to [" + slack_stat + "] from [" + slack_stat_old + "]"
     slack.notify(text=body)
 
 # Main Program
