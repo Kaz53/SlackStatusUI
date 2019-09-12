@@ -246,7 +246,7 @@ if __name__ == '__main__':
             text_str = 'Commuting'
             text_pos = (text_pos_x, text_pos_y)
             font_size = 3
-        elif slack_stat == 'In a meeting':
+        elif slack_stat in ['In a meeting', '会議中']:
             img_file = os.path.join(dirname, 'Meeting.png')
             text_str = 'Meeting'
             text_pos = (text_pos_x, text_pos_y - 20)
