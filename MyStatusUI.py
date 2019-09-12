@@ -189,7 +189,7 @@ def log_output(pdirname, ui_image, slack_stat, slack_exp_uni):
         write_log(slack_stat, slack_exp_uni)
 
 
-def post_slack(slack_kazu_url, slack_stat, slack_stat_old):
+def post_slack(slack_kazu_url, slack_stat, slack_stat_old, mes_body):
     """Post message in Kazu channel."""
     slack = slackweb.Slack(url=slack_kazu_url)
     body = "Changed to [" + slack_stat + "] from [" + slack_stat_old + "]"
@@ -375,7 +375,7 @@ if __name__ == '__main__':
         # Write image and log for history when change status
         if slack_stat != slack_stat_old or slack_stat_old == "":
             log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
-            post_slack(slack_kazu_url, slack_stat, slack_stat_old)
+            post_slack(slack_kazu_url, slack_stat, slack_stat_old, "")
 
         # Wait 20sec
         time.sleep(20)
