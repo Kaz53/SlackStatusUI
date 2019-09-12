@@ -18,6 +18,7 @@ import glob
 import time
 import json
 import ipget
+import slackweb
 
 
 def gc_time_get():
@@ -187,6 +188,13 @@ def log_output(pdirname, ui_image, slack_stat, slack_exp_uni):
         # Save log
         write_log(slack_stat, slack_exp_uni)
 
+
+def post_slack(slack_kazu_url, slack_stat, slack_stat_old):
+    """Post message in Kazu channel."""
+    slack = slackweb.Slack(url=slack_kazu_url)
+    body = "Changed to " + slack_stat + " from " + slack_stat_old
+    slack.notify(text=body)
+
 # Main Program
 if __name__ == '__main__':
     err = 0
@@ -204,6 +212,7 @@ if __name__ == '__main__':
         Slack_conf_json = json.load(Slack_conf)
     Slack_USER_TOKEN = Slack_conf_json['Slack_USER_TOKEN']
     Slack_USER_ID = Slack_conf_json['Slack_USER_ID']
+    slack_kazu_url = Slack_conf_json['Slack_Kazu_channel']
     Slack_url_get = "https://slack.com/api/users.profile.get"
     Slack_url_set = "https://slack.com/api/users.profile.set"
     timeout_time = (3.0, 7.5)
@@ -364,6 +373,7 @@ if __name__ == '__main__':
         # Write image and log for history when change status
         if slack_stat != slack_stat_old or slack_stat_old == "":
             log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
+            post_slack(slack_kazu_url, slack_stat, slack_stat_old)
 
         # Wait 20sec
         time.sleep(20)
