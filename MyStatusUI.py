@@ -66,9 +66,6 @@ def gc_time_get():
 
     if not events:
         print('No upcoming events found.')
-    # for event in events:
-        # start = event['start'].get('dateTime', event['start'].get('date'))
-        # print(start,event['summary'])
 
     i = 0
     event_no = None
@@ -189,10 +186,10 @@ def log_output(pdirname, ui_image, slack_stat, slack_exp_uni):
         write_log(slack_stat, slack_exp_uni)
 
 
-def post_slack(slack_kazu_url, slack_stat, slack_stat_old, mes_body):
+def post_slack(mes_body):
     """Post message in Kazu channel."""
     slack = slackweb.Slack(url=slack_kazu_url)
-    body = "Changed to [" + slack_stat + "] from [" + slack_stat_old + "]"
+    body = mes_body
     slack.notify(text=body)
 
 # Main Program
@@ -227,6 +224,7 @@ if __name__ == '__main__':
             slack_res_str = requests.get(
                 Slack_url_get, params=data, timeout=timeout_time)
         except Timeout:
+            post_slack("Can't get slack status")
             time.sleep(30)
             slack_res_str = requests.get(
                 Slack_url_get, params=data, timeout=timeout_time)
@@ -311,6 +309,8 @@ if __name__ == '__main__':
             print(slack_stat)
             print(img_file)
             print('error no ICON file')
+            mes_body = "Doesn't much status. slack_stat:" + slack_stat
+            post_slack(mes_body)
 
         # Overlay Logo
         background = np.zeros(shape=(480, 810, 3), dtype=np.uint8)
@@ -375,7 +375,9 @@ if __name__ == '__main__':
         # Write image and log for history when change status
         if slack_stat != slack_stat_old or slack_stat_old == "":
             log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
-            post_slack(slack_kazu_url, slack_stat, slack_stat_old, "")
+            mes_body = "Changed to [" + slack_stat + "] from ["\
+                + lack_stat_old + "]"
+            post_slack(mes_body)
 
         # Wait 20sec
         time.sleep(20)
