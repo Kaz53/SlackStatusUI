@@ -376,7 +376,7 @@ if __name__ == '__main__':
         if slack_stat != slack_stat_old or slack_stat_old == "":
             log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
             mes_body = "Changed to [" + slack_stat + "] from ["\
-                + lack_stat_old + "]"
+                + slack_stat_old + "]"
             post_slack(mes_body)
 
         # Wait 20sec
