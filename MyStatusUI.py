@@ -211,7 +211,7 @@ if __name__ == '__main__':
     slack_kazu_url = Slack_conf_json['Slack_Kazu_channel']
     Slack_url_get = "https://slack.com/api/users.profile.get"
     Slack_url_set = "https://slack.com/api/users.profile.set"
-    timeout_time = (3.0, 10)
+    timeout_time = (3.0, 7.5)
 
     # Logo files load
     PAL_logo_file = os.path.join(dirname, 'FXPAL.png')
@@ -222,12 +222,15 @@ if __name__ == '__main__':
         try:
             slack_res_str = requests.get(
                 Slack_url_get, params=data, timeout=timeout_time)
-        except Exception as e:
-            post_slack("Can't get slack status")
-            post_slack("e.args")
+        except requests.exceptions.ReadTimeout:
+            post_slack("Trying getting slack status after 30sec")
             time.sleep(30)
-            slack_res_str = requests.get(
-                Slack_url_get, params=data, timeout=timeout_time)
+            try:
+                slack_res_str = requests.get(
+                    Slack_url_get, params=data, timeout=timeout_time)
+            except requests.exceptions.ReadTimeout:
+                post_slack("Can't get slack status")
+                break
         slack_json = slack_res_str.json()
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
