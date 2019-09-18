@@ -278,7 +278,9 @@ if __name__ == '__main__':
             text_str = 'At FXGI'
             text_pos = (text_pos_x, text_pos_y)
             font_size = 4
-        elif slack_stat == 'Working remotely':
+        elif slack_stat in ['Working remotely', 'リモートで作業中']:
+            if slack_stat == 'リモートで作業中':
+                slack_stat == 'Working remotely'
             img_file = os.path.join(dirname, 'computer.png')
             text_str = 'Working remotely'
             text_pos = (text_pos_x, text_pos_y)
