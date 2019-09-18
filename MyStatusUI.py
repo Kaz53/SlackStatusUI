@@ -251,7 +251,9 @@ if __name__ == '__main__':
             text_str = 'At office'
             text_pos = (text_pos_x, text_pos_y)
             font_size = 4
-        elif slack_stat == 'Commuting':
+        elif slack_stat in ['Commuting', '通勤途中']:
+            if slack_stat == '通勤途中':
+                slack_stat = 'Commuting'
             img_file = os.path.join(dirname, 'Commuting.png')
             text_str = 'Commuting'
             text_pos = (text_pos_x, text_pos_y)
@@ -285,7 +287,9 @@ if __name__ == '__main__':
             text_str = 'Working remotely'
             text_pos = (text_pos_x, text_pos_y)
             font_size = 2
-        elif slack_stat == 'Absence':
+        elif slack_stat in ['Absence', '病欠']:
+            if slack_stat == '病欠':
+                slack_stat = 'Absence'
             img_file = os.path.join(dirname, 'absence.png')
             text_str = 'Absence'
             text_pos = (text_pos_x, text_pos_y)
