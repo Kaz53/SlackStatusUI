@@ -223,13 +223,13 @@ if __name__ == '__main__':
             slack_res_str = requests.get(
                 Slack_url_get, params=data, timeout=timeout_time)
         except requests.exceptions.ReadTimeout:
-            post_slack("Trying getting slack status after 30sec")
+            post_slack("Try to get slack status after 30sec.")
             time.sleep(30)
             try:
                 slack_res_str = requests.get(
                     Slack_url_get, params=data, timeout=timeout_time)
             except requests.exceptions.ReadTimeout:
-                post_slack("Can't get slack status")
+                post_slack("Can't get slack status!")
                 break
         slack_json = slack_res_str.json()
         slack_stat = slack_json['profile']['status_text']
@@ -318,7 +318,7 @@ if __name__ == '__main__':
             print(slack_stat)
             print(img_file)
             print('error no ICON file')
-            mes_body = "Doesn't much status. slack_stat:" + slack_stat
+            mes_body = "Doesn't much status. slack_stat: " + slack_stat
             post_slack(mes_body)
 
         # Overlay Logo
