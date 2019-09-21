@@ -222,13 +222,13 @@ if __name__ == '__main__':
         try:
             slack_res_str = requests.get(
                 Slack_url_get, params=data, timeout=timeout_time)
-        except requests.exceptions.ReadTimeout:
+        except requests.RequestException:
             post_slack("Try to get slack status after 30sec.")
-            time.sleep(30)
+            time.sleep(60)
             try:
                 slack_res_str = requests.get(
                     Slack_url_get, params=data, timeout=timeout_time)
-            except requests.exceptions.ReadTimeout:
+            except requests.RequestException:
                 post_slack("Can't get slack status!")
                 break
         slack_json = slack_res_str.json()
