@@ -25,7 +25,9 @@ if __name__ == '__main__':
 
     # Read error log
     error_log_file = open(os.path.join(pdirname, 'log.txt'))
-    error_log = error_log_file.read()
-    error_log_file.close()
+    if os.path.exists(error_log_file):
+        error_log = error_log_file.read()
+        error_log_file.close()
 
-    post_slack(error_log)
+        if error_log != "":
+            post_slack(error_log)
