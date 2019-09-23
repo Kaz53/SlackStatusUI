@@ -357,7 +357,7 @@ if __name__ == '__main__':
             font_size, (200, 200, 200), 5, cv2.LINE_AA)
 
         # Write end time
-        if text_str in ['Meeting', 'Out of office', 'At FXGI', 'Absence']:
+        if text_str in ['Meeting', 'Out of office', 'At FXGI', 'Absence', 'Working remotely']:
             print(slack_exp_uni)
             if slack_exp_uni != 0:
                 slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
