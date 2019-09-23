@@ -197,8 +197,8 @@ def ip_check():
     ip_addr = ipget.ipget().ipaddr("wlan0")
 
     if ip_addr != ip_addr_prev:
-        body = 'New IP Address: ' + ip_addr
-        post_slack(text=body)
+        mes_body = 'New IP Address: ' + ip_addr
+        post_slack(mes_body)
         with open(ip_file_name, mode='w') as ip_file:
             ip_file.write(ip_addr)
 
