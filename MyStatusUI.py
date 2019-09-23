@@ -185,6 +185,24 @@ def log_output(pdirname, ui_image, slack_stat, slack_exp_uni):
         write_log(slack_stat, slack_exp_uni)
 
 
+def ip_check():
+    """IP Address check."""
+    ip_addr_prev = ""
+    logdir = os.path.join(pdirname, "log")
+    ip_file_name = os.path.join(logdir, 'ip.txt')
+    if os.path.exists(ip_file_name) is True:
+        with open(ip_file_name) as ip_file:
+            ip_addr_prev = ip_file.read()
+
+    ip_addr = ipget.ipget().ipaddr("wlan0")
+
+    if ip_addr != ip_addr_prev:
+        body = 'New IP Address: ' + ip_addr
+        post_slack(text=body)
+        with open(ip_file_name, mode='w') as ip_file:
+            ip_file.write(ip_addr)
+
+
 def post_slack(mes_body):
     """Post message in Kazu channel."""
     slack = slackweb.Slack(url=slack_kazu_url)
@@ -380,6 +398,8 @@ if __name__ == '__main__':
             file_list = glob.glob("./log/*jpg")
             for file in file_list:
                 os.remove(file)
+
+            ip_check()
 
         # Write image and log for history when change status
         if slack_stat != slack_stat_old or slack_stat_old == "":
