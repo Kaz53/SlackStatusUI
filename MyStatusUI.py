@@ -18,6 +18,7 @@ import time
 import json
 import ipget
 import slackweb
+import locale
 
 
 def gc_time_get():
@@ -203,6 +204,16 @@ def ip_check():
             ip_file.write(ip_addr)
 
 
+def exp_check(slack_exp_uni):
+    """Check exp soon."""
+    now_unix = int(datetime.datetime.now().strftime('%s'))
+    diff_unix = slack_exp_uni - now_unix
+    if diff_unix // 60 <= 5:
+        mes_body = "Within 5min, Slack Status will be expired."
+        post_slack(mes_body)
+    return(diff_unix // 60 <= 5)
+
+
 def post_slack(mes_body):
     """Post message in Kazu channel."""
     slack = slackweb.Slack(url=slack_kazu_url)
@@ -215,6 +226,8 @@ if __name__ == '__main__':
     cnt = 0
     slack_stat = ""
     slack_stat_old = ""
+    slack_exp_uni_old = 0
+    exp_ch_post = False
     if platform.system() == "Linux":
         os.chdir('/home/pi/Projects/SlackStatusUI')
     pdirname = os.getcwd()
@@ -252,6 +265,7 @@ if __name__ == '__main__':
         slack_json = slack_res_str.json()
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
+        locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
 
         print(cnt, datestr, ":[new]-", slack_stat, "[old]-", slack_stat_old)
@@ -399,10 +413,18 @@ if __name__ == '__main__':
             for file in file_list:
                 os.remove(file)
 
-            ip_check()
+            if platform.system() == "Linux":
+                ip_check()
+
+        # Check expire soon
+        if slack_exp_uni != slack_exp_uni_old:
+            exp_ch_post = False
+        if exp_ch_post is False and slack_exp_uni != 0:
+            exp_ch_post = exp_check(slack_exp_uni)
 
         # Write image and log for history when change status
-        if slack_stat != slack_stat_old or slack_stat_old == "":
+        if slack_stat != slack_stat_old:
+            exp_ch_post = False
             log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
             mes_body = "Changed to [" + slack_stat + "] from ["\
                 + slack_stat_old + "]"
@@ -411,6 +433,7 @@ if __name__ == '__main__':
         # Wait 20sec
         time.sleep(20)
         slack_stat_old = slack_stat
+        slack_exp_uni_old = slack_exp_uni
 
         cnt += 1
         time_now = datetime.datetime.now()
