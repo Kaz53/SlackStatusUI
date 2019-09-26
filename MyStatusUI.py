@@ -255,13 +255,15 @@ if __name__ == '__main__':
                 Slack_url_get, params=data, timeout=timeout_time)
         except requests.exceptions.RequestException:
             post_slack("Try to get slack status after 30sec.")
-            time.sleep(60)
+            time.sleep(30)
             try:
                 slack_res_str = requests.get(
                     Slack_url_get, params=data, timeout=timeout_time)
             except requests.exceptions.RequestException:
                 post_slack("Can't get slack status!")
                 break
+            else:
+                post_slack("Could get slack status.")
         slack_json = slack_res_str.json()
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
