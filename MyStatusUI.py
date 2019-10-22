@@ -220,6 +220,21 @@ def post_slack(mes_body):
     body = mes_body
     slack.notify(text=body)
 
+
+def greet_word():
+    """Decide greeting word based on time."""
+    time_now = datetime.datetime.now()
+    time_hour = int(time_now.strftime("%-H"))
+    morning_hours = [6, 7, 8, 9]
+    evening_hours = [17, 18, 19, 20, 21, 22, 23]
+
+    if time_hour in morning_hours:
+        return "Good morinig!", 0, 2.5
+    elif time_hour in evening_hours:
+        return "Good evening!", 0, 2.5
+    else:
+        return "Hello!", 80, 4
+
 # Main Program
 if __name__ == '__main__':
     err = 0
@@ -293,9 +308,10 @@ if __name__ == '__main__':
             font_size = 4
         elif slack_stat == 'At my office':
             img_file = os.path.join(dirname, 'Work.png')
-            text_str = 'Hello!'
-            text_pos = (text_pos_x + 80, text_pos_y)
-            font_size = 4
+            gw, offset, f_size = greet_word()
+            text_str = gw
+            text_pos = (text_pos_x + offset, text_pos_y)
+            font_size = f_size
         elif slack_stat in ['Commuting', '通勤途中']:
             if slack_stat == '通勤途中':
                 slack_stat = 'Commuting'
