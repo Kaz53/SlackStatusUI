@@ -291,6 +291,11 @@ if __name__ == '__main__':
             text_str = 'At office'
             text_pos = (text_pos_x, text_pos_y)
             font_size = 4
+        elif slack_stat == 'At my office':
+            img_file = os.path.join(dirname, 'Work.png')
+            text_str = 'Hello!'
+            text_pos = (text_pos_x + 80, text_pos_y)
+            font_size = 4
         elif slack_stat in ['Commuting', '通勤途中']:
             if slack_stat == '通勤途中':
                 slack_stat = 'Commuting'
