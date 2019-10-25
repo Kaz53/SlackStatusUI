@@ -262,6 +262,11 @@ if __name__ == '__main__':
     # Logo files load
     PAL_logo_file = os.path.join(dirname, 'FXPAL.png')
 
+    # Post current time to Slack
+    ini_mes = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
+    post_slack(ini_mes)
+
+    # Loop main program
     while err == 0:
         data = {"token": Slack_USER_TOKEN, "user": Slack_USER_ID}
         img_file = ""
