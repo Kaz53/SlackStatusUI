@@ -274,19 +274,18 @@ if __name__ == '__main__':
             slack_res_str = requests.get(
                 Slack_url_get, params=data, timeout=timeout_time)
         except requests.exceptions.RequestException:
-            post_slack("[Error!] Can't get slack status!1")
             time.sleep(30)
             try:
                 slack_res_str = requests.get(
                     Slack_url_get, params=data, timeout=timeout_time)
             except requests.exceptions.RequestException:
-                post_slack("[Error!] Can't get slack status!2")
                 time.sleep(60)
                 try:
                     slack_res_str = requests.get(
                         Slack_url_get, params=data, timeout=timeout_time)
                 except requests.exceptions.RequestException:
-                    post_slack("[Error!] Can't get slack status!3")
+                    time.sleep(60)
+                    post_slack("[Error!] Can't get slack status!")
                     break
                 else:
                     post_slack("Success to retry getting Slack status.")
