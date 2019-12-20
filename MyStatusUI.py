@@ -229,7 +229,7 @@ def greet_word():
     evening_hours = [17, 18, 19, 20, 21, 22, 23]
 
     if time_hour in morning_hours:
-        return "Good morinig!", 0, 2.5
+        return "Good morning!", 0, 2.5
     elif time_hour in evening_hours:
         return "Good evening!", 0, 2.5
     else:
