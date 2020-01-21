@@ -161,7 +161,12 @@ def write_log(slack_stat, slack_exp_uni):
         spreadsheetId=spreadsheet_id, range=range_,
         valueInputOption=value_input_option,
         insertDataOption=insert_data_option, body=value_range_body)
-    request.execute()
+    try:
+        request.execute()
+    except socket.timeout:
+            time.sleep(30)
+            request.execute()
+            post_slack("Success to retry writing log in spreadsheet.")
 
 
 def overlay_icon(x, y, icon):
