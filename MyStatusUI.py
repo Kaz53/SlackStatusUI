@@ -395,8 +395,15 @@ if __name__ == '__main__':
 
         # Overlay Logo
         background = np.zeros(shape=(480, 810, 3), dtype=np.uint8)
-        background[:120, :, :] = 70
-        background[410:, :, :] = 70
+        background[:, :, 0] = 33
+        background[:, :, 1] = 24
+        background[:, :, 2] = 22
+        background[:120, :, 0] = 137
+        background[:120, :, 1] = 112
+        background[:120, :, 2] = 107
+        background[410:, :, 0] = 137
+        background[410:, :, 1] = 112
+        background[410:, :, 2] = 107
         icon = cv2.imread(PAL_logo_file)
         overlay_icon(30, 10, icon)
 
@@ -404,13 +411,13 @@ if __name__ == '__main__':
         ui_image = cv2.putText(
             background, "Kazu's status", (150, 70),
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
-            2.5, (200, 200, 200), 3, cv2.LINE_AA)
+            2.5, (222, 212, 210), 3, cv2.LINE_AA)
 
         # Write Titile on image
         ui_image = cv2.putText(
             ui_image, "from Slack", (570, 110),
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
-            1, (150, 150, 150), 2, cv2.LINE_AA)
+            1, (209, 172, 145), 2, cv2.LINE_AA)
 
         # Overlay ICON
         icon = cv2.imread(img_file)
@@ -420,13 +427,13 @@ if __name__ == '__main__':
         ui_image = cv2.putText(
             ui_image, datestr, (450, 450),
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
-            0.8, (150, 150, 150), 1, cv2.LINE_AA)
+            0.8, (209, 172, 145), 1, cv2.LINE_AA)
 
         # Write Status on image
         ui_image = cv2.putText(
             ui_image, text_str, text_pos,
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
-            font_size, (200, 200, 200), 5, cv2.LINE_AA)
+            font_size, (209, 200, 198), 5, cv2.LINE_AA)
 
         # Write end time
         if text_str in [
@@ -440,7 +447,7 @@ if __name__ == '__main__':
                 ui_image = cv2.putText(
                     ui_image, slack_end, (400, 370),
                     cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
-                    2, (200, 200, 200), 3, cv2.LINE_AA)
+                    2, (222, 212, 210), 3, cv2.LINE_AA)
 
         cv2.imshow("MyStatus", ui_image)
         cv2.waitKey(1)
