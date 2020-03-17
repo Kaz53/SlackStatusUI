@@ -234,11 +234,40 @@ def greet_word():
     evening_hours = [17, 18, 19, 20, 21, 22, 23]
 
     if time_hour in morning_hours:
-        return "Good morning!", 0, 2.5
+        return "At my office1"
     elif time_hour in evening_hours:
-        return "Good evening!", 0, 2.5
+        return "At my office2"
     else:
-        return "Hello!", 80, 4
+        return "At my office3"
+
+
+def status_param(slack_stat):
+    """Load status parameters."""
+    status_param_file = os.path.join(pdirname, 'SlackStatus_param.json')
+    with open(status_param_file, 'rb') as status_params:
+        status_params_json = json.load(status_params)
+    img_name = status_params_json[slack_stat]["img_file"]
+    text_str = status_params_json[slack_stat]["text_str"]
+    x_offset = status_params_json[slack_stat]["pos_x_offset"]
+    y_offset = status_params_json[slack_stat]["pos_y_offset"]
+    font_size = status_params_json[slack_stat]["font_size"]
+
+    return img_name, text_str, x_offset, y_offset, font_size
+
+
+def main_status_define(slack_stat):
+    """Define main status."""
+    if slack_stat == "Home":
+        main_status = "Home"
+        emoji = ":house_with_garden:"
+    elif slack_stat in ['At work', 'At my office']:
+        main_status = 'At work'
+        emoji = ":office:"
+    elif slack_stat == 'Working remotely':
+        main_status = 'Working remotely'
+        emoji = "computer:"
+    return main_status, emoji
+
 
 # Main Program
 if __name__ == '__main__':
@@ -307,84 +336,43 @@ if __name__ == '__main__':
         # slack_stat = 'Lunch'
         text_pos_x = 200
         text_pos_y = 290
-        if slack_stat == 'Home':
-            img_file = os.path.join(dirname, 'Home.png')
-            text_str = 'At home'
-            text_pos = (text_pos_x, text_pos_y)
-            font_size = 4
-        elif slack_stat == 'At work':
-            img_file = os.path.join(dirname, 'Work.png')
-            text_str = 'At office'
-            text_pos = (text_pos_x, text_pos_y)
-            font_size = 4
-        elif slack_stat == 'At my office':
-            img_file = os.path.join(dirname, 'Work.png')
-            gw, offset, f_size = greet_word()
-            text_str = gw
-            text_pos = (text_pos_x + offset, text_pos_y)
-            font_size = f_size
+        if slack_stat == 'At my office':
+            slack_stat = greet_word()
         elif slack_stat in ['Commuting', '通勤途中']:
             if slack_stat == '通勤途中':
                 slack_stat = 'Commuting'
-            img_file = os.path.join(dirname, 'Commuting.png')
-            text_str = 'Commuting'
-            text_pos = (text_pos_x, text_pos_y)
-            font_size = 3
         elif slack_stat in ['In a meeting', '会議中']:
             if slack_stat == '会議中':
                 slack_stat = 'In a meeting'
-            img_file = os.path.join(dirname, 'Meeting.png')
-            text_str = 'Meeting'
-            text_pos = (text_pos_x, text_pos_y - 20)
-            font_size = 4
-        elif slack_stat == 'Lunch':
-            img_file = os.path.join(dirname, 'lunch.png')
-            text_str = 'Lunch'
-            text_pos = (text_pos_x + 30, text_pos_y)
-            font_size = 4
-        elif slack_stat == 'Out of office':
-            img_file = os.path.join(dirname, 'bluecar.png')
-            text_str = 'Out of office'
-            text_pos = (text_pos_x + 20, text_pos_y)
-            font_size = 2.5
-        elif slack_stat == 'At FXGI':
-            img_file = os.path.join(dirname, 'Work.png')
-            text_str = 'At FXGI'
-            text_pos = (text_pos_x, text_pos_y)
-            font_size = 4
         elif slack_stat in ['Working remotely', 'リモートで作業中']:
             if slack_stat == 'リモートで作業中':
                 slack_stat == 'Working remotely'
-            img_file = os.path.join(dirname, 'computer.png')
-            text_str = 'Working remotely'
-            text_pos = (text_pos_x, text_pos_y)
-            font_size = 2
         elif slack_stat in ['Absence', '病欠']:
             if slack_stat == '病欠':
                 slack_stat = 'Absence'
-            img_file = os.path.join(dirname, 'absence.png')
-            text_str = 'Absence'
-            text_pos = (text_pos_x, text_pos_y)
-            font_size = 4
-        elif slack_stat == 'Trip':
-            img_file = os.path.join(dirname, 'trip.png')
-            text_str = 'Trip'
-            text_pos = (text_pos_x + 80, text_pos_y)
-            font_size = 4
         elif slack_stat == "":
-            slack_stat = 'At work'
-            img_file = os.path.join(dirname, 'Work.png')
-            text_str = 'At office'
-            text_pos = (text_pos_x, text_pos_y)
-            font_size = 4
+            if main_status == "":
+                main_status = 'At work'
+                emoji = ":office:"
+            slack_stat = main_status
             profile = {
                 "status_text": slack_stat,
-                "status_emoji": ":office:",
+                "status_emoji": emoji,
                 "status_expiration": 0}
             profile = json.dumps(profile)
             data["profile"] = profile
             slack_res_str_post = requests.post(
                 Slack_url_set, data=data, timeout=timeout_time)
+
+        img_name, text_str, x_offset, y_offset, font_size = \
+            status_param(slack_stat)
+        img_file = os.path.join(dirname, img_name)
+        text_pos = (text_pos_x + x_offset, text_pos_y + y_offset)
+
+        if "At my office" in slack_stat:
+            slack_stat = "At my office"
+
+        main_status, emoji = main_status_define(slack_stat)
 
         if os.path.exists(img_file) is False:
             print(slack_stat)
@@ -393,7 +381,7 @@ if __name__ == '__main__':
             mes_body = "Doesn't much status. slack_stat: " + slack_stat
             post_slack(mes_body)
 
-        # Overlay Logo
+        # Overlay Company Logo
         background = np.zeros(shape=(480, 810, 3), dtype=np.uint8)
         background[:, :, 0] = 33
         background[:, :, 1] = 24
@@ -419,7 +407,7 @@ if __name__ == '__main__':
             cv2.FONT_HERSHEY_DUPLEX | cv2.FONT_ITALIC,
             1, (209, 172, 145), 2, cv2.LINE_AA)
 
-        # Overlay ICON
+        # Overlay Emoji ICON
         icon = cv2.imread(img_file)
         overlay_icon(30, 140, icon)
 
