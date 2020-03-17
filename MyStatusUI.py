@@ -373,12 +373,8 @@ if __name__ == '__main__':
         img_file = os.path.join(dirname, img_name)
         text_pos = (text_pos_x + x_offset, text_pos_y + y_offset)
 
-        print(slack_stat)
-
         if "At my office" in slack_stat:
             slack_stat = "At my office"
-
-        print(slack_stat)
 
         main_status, emoji = main_status_define(slack_stat)
 
