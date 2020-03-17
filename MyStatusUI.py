@@ -284,6 +284,7 @@ if __name__ == '__main__':
         os.chdir('/home/pi/Projects/SlackStatusUI')
     pdirname = os.getcwd()
     dirname = os.path.join(pdirname, "data")
+    main_status == ""
 
     # Slack Seetings
     Slack_conf_file = os.path.join(pdirname, 'Slack_conf.json')
@@ -355,8 +356,8 @@ if __name__ == '__main__':
                 slack_stat = 'Absence'
         elif slack_stat == "":
             if main_status == "":
-                main_status = 'At work'
-                emoji = ":office:"
+                main_status = 'Home'
+                emoji = "::house_with_garden:"
             slack_stat = main_status
             profile = {
                 "status_text": slack_stat,
