@@ -266,6 +266,9 @@ def main_status_define(slack_stat):
     elif slack_stat == 'Working remotely':
         main_status = 'Working remotely'
         emoji = "computer:"
+    else:
+        main_status = main_status
+        emoji = emoji
     return main_status, emoji
 
 
