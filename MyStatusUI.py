@@ -472,10 +472,17 @@ if __name__ == '__main__':
                 + slack_stat_old + "]"
             post_slack(mes_body)
 
+        # Post slack when change main status
+        if main_status != main_status_old:
+            mes_body = "Changed main_status to [" + main_status + "] from ["\
+                + main_status_old + "]"
+            post_slack(mes_body)
+
         # Wait 20sec
         time.sleep(20)
         slack_stat_old = slack_stat
         slack_exp_uni_old = slack_exp_uni
+        main_status_old = main_status
 
         cnt += 1
         time_now = datetime.datetime.now()
