@@ -266,9 +266,7 @@ def main_status_define(slack_stat):
     elif slack_stat == 'Working remotely':
         main_status = 'Working remotely'
         emoji = "computer:"
-    else:
-        main_status = 'At work'
-        emoji = ":office:"
+
     return main_status, emoji
 
 
@@ -341,8 +339,13 @@ if __name__ == '__main__':
         # slack_stat = 'Lunch'
         text_pos_x = 200
         text_pos_y = 290
-        if slack_stat == 'At my office':
+        if slack_stat == 'Home':
+            main_status, emoji = main_status_define(slack_stat)
+        elif slack_stat == 'At work':
+            main_status, emoji = main_status_define(slack_stat)
+        elif slack_stat == 'At my office':
             slack_stat = greet_word()
+            main_status, emoji = main_status_define(slack_stat)
         elif slack_stat in ['Commuting', '通勤途中']:
             if slack_stat == '通勤途中':
                 slack_stat = 'Commuting'
@@ -352,6 +355,7 @@ if __name__ == '__main__':
         elif slack_stat in ['Working remotely', 'リモートで作業中']:
             if slack_stat == 'リモートで作業中':
                 slack_stat == 'Working remotely'
+            main_status, emoji = main_status_define(slack_stat)
         elif slack_stat in ['Absence', '病欠']:
             if slack_stat == '病欠':
                 slack_stat = 'Absence'
@@ -376,8 +380,6 @@ if __name__ == '__main__':
 
         if "At my office" in slack_stat:
             slack_stat = "At my office"
-
-        main_status, emoji = main_status_define(slack_stat)
 
         if os.path.exists(img_file) is False:
             print(slack_stat)
