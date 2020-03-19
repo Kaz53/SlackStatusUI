@@ -336,7 +336,7 @@ if __name__ == '__main__':
 
         print(cnt, datestr, ":[new]-", slack_stat, "[old]-", slack_stat_old)
 
-        slack_stat = '通話中'
+        # slack_stat = '通話中'
         text_pos_x = 200
         text_pos_y = 290
         if slack_stat == 'Home':
