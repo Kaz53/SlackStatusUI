@@ -285,6 +285,7 @@ if __name__ == '__main__':
     pdirname = os.getcwd()
     dirname = os.path.join(pdirname, "data")
     main_status = ""
+    main_status_old = ""
 
     # Slack Seetings
     Slack_conf_file = os.path.join(pdirname, 'Slack_conf.json')
