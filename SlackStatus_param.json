@@ -89,5 +89,12 @@
 		"pos_x_offset":80,
 		"pos_y_offset":0,
 		"font_size":4
+	},
+	"On a call":{
+		"img_file":"call.png",
+		"text_str":"On a call",
+		"pos_x_offset":80,
+		"pos_y_offset":0,
+		"font_size":3
 	}
 }

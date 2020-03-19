@@ -336,7 +336,7 @@ if __name__ == '__main__':
 
         print(cnt, datestr, ":[new]-", slack_stat, "[old]-", slack_stat_old)
 
-        # slack_stat = 'Lunch'
+        slack_stat = '通話中'
         text_pos_x = 200
         text_pos_y = 290
         if slack_stat == 'Home':
@@ -359,6 +359,9 @@ if __name__ == '__main__':
         elif slack_stat in ['Absence', '病欠']:
             if slack_stat == '病欠':
                 slack_stat = 'Absence'
+        elif slack_stat in ['On a call', '通話中']:
+            if slack_stat == '通話中':
+                slack_stat = 'On a call'
         elif slack_stat == "":
             if main_status == "":
                 main_status = 'Home'
