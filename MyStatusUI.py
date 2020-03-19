@@ -265,7 +265,7 @@ def main_status_define(slack_stat):
         emoji = ":office:"
     elif slack_stat == 'Working remotely':
         main_status = 'Working remotely'
-        emoji = "computer:"
+        emoji = ":computer:"
 
     return main_status, emoji
 
@@ -346,9 +346,8 @@ if __name__ == '__main__':
         elif slack_stat == 'At my office':
             slack_stat = greet_word()
             main_status, emoji = main_status_define(slack_stat)
-        elif slack_stat in ['Commuting', '通勤途中']:
-            if slack_stat == '通勤途中':
-                slack_stat = 'Commuting'
+        elif slack_stat == '通勤途中':
+            slack_stat = 'Commuting'
         elif slack_stat in ['In a meeting', '会議中']:
             if slack_stat == '会議中':
                 slack_stat = 'In a meeting'
@@ -356,16 +355,14 @@ if __name__ == '__main__':
             if slack_stat == 'リモートで作業中':
                 slack_stat == 'Working remotely'
             main_status, emoji = main_status_define(slack_stat)
-        elif slack_stat in ['Absence', '病欠']:
-            if slack_stat == '病欠':
-                slack_stat = 'Absence'
-        elif slack_stat in ['On a call', '通話中']:
-            if slack_stat == '通話中':
-                slack_stat = 'On a call'
+        elif slack_stat == '病欠':
+            slack_stat = 'Absence'
+        elif slack_stat == '通話中':
+            slack_stat = 'On a call'
         elif slack_stat == "":
             if main_status == "":
                 main_status = 'Home'
-                emoji = "::house_with_garden:"
+                emoji = ":house_with_garden:"
             slack_stat = main_status
             profile = {
                 "status_text": slack_stat,
