@@ -251,23 +251,20 @@ def status_param(slack_stat):
     x_offset = status_params_json[slack_stat]["pos_x_offset"]
     y_offset = status_params_json[slack_stat]["pos_y_offset"]
     font_size = status_params_json[slack_stat]["font_size"]
+    emoji = status_params_json[slack_stat]["emoji"]
 
-    return img_name, text_str, x_offset, y_offset, font_size
+    return img_name, text_str, x_offset, y_offset, font_size, emoji
 
 
-def main_status_define(slack_stat):
-    """Define main status."""
-    if slack_stat == "Home":
-        main_status = "Home"
-        emoji = ":house_with_garden:"
-    elif slack_stat in ['At work', 'At my office']:
-        main_status = 'At work'
-        emoji = ":office:"
-    elif slack_stat == 'Working remotely':
-        main_status = 'Working remotely'
-        emoji = ":computer:"
-
-    return main_status, emoji
+def slack_st_chan(slack_stat, emoji, slack_url_set, data, timeout_time):
+    """Change Slack status."""
+    profile = {
+        "status_text": slack_stat,
+        "status_emoji": emoji,
+        "status_expiration": 0}
+    profile = json.dumps(profile)
+    data["profile"] = profile
+    requests.post(slack_url_set, data=data, timeout=timeout_time)
 
 
 # Main Program
@@ -276,6 +273,7 @@ if __name__ == '__main__':
     cnt = 0
     slack_stat = ""
     slack_stat_old = ""
+    slack_exp_uni = 0
     slack_exp_uni_old = 0
     exp_ch_post = False
     if platform.system() == "Linux":
@@ -292,8 +290,8 @@ if __name__ == '__main__':
     Slack_USER_TOKEN = Slack_conf_json['Slack_USER_TOKEN']
     Slack_USER_ID = Slack_conf_json['Slack_USER_ID']
     slack_kazu_url = Slack_conf_json['Slack_Kazu_channel']
-    Slack_url_get = "https://slack.com/api/users.profile.get"
-    Slack_url_set = "https://slack.com/api/users.profile.set"
+    slack_url_get = "https://slack.com/api/users.profile.get"
+    slack_url_set = "https://slack.com/api/users.profile.set"
     timeout_time = (3.0, 7.5)
 
     # Logo files load
@@ -307,19 +305,32 @@ if __name__ == '__main__':
     while err == 0:
         data = {"token": Slack_USER_TOKEN, "user": Slack_USER_ID}
         img_file = ""
+
+        # Check expire status
+        if slack_exp_uni != 0:
+            now_unix = int(datetime.datetime.now().strftime('%s'))
+            diff_unix = slack_exp_uni - now_unix
+            # Change status to main_status if expire within 60sec
+            if diff_unix <= 60 and main_status != "":
+                _, _, _, _, _, emoji = status_param(main_status)
+                slack_st_chan(
+                    main_status, emoji, slack_url_set, data, timeout_time)
+                time.sleep(5)
+
+        # Get current slack status
         try:
             slack_res_str = requests.get(
-                Slack_url_get, params=data, timeout=timeout_time)
+                slack_url_get, params=data, timeout=timeout_time)
         except requests.exceptions.RequestException:
             time.sleep(30)
             try:
                 slack_res_str = requests.get(
-                    Slack_url_get, params=data, timeout=timeout_time)
+                    slack_url_get, params=data, timeout=timeout_time)
             except requests.exceptions.RequestException:
                 time.sleep(60)
                 try:
                     slack_res_str = requests.get(
-                        Slack_url_get, params=data, timeout=timeout_time)
+                        slack_url_get, params=data, timeout=timeout_time)
                 except requests.exceptions.RequestException:
                     time.sleep(60)
                     post_slack("[Error!] Can't get slack status!")
@@ -334,18 +345,17 @@ if __name__ == '__main__':
         locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
         datestr = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
 
-        print(cnt, datestr, ":[new]-", slack_stat, "[old]-", slack_stat_old)
-
         # slack_stat = '通話中'
         text_pos_x = 200
         text_pos_y = 290
-        if slack_stat == 'Home':
-            main_status, emoji = main_status_define(slack_stat)
+        if slack_stat == "":
+            slack_stat = 'Home'
+            main_status = slack_stat
         elif slack_stat == 'At work':
-            main_status, emoji = main_status_define(slack_stat)
+            main_status = slack_stat
         elif slack_stat == 'At my office':
             slack_stat = greet_word()
-            main_status, emoji = main_status_define(slack_stat)
+            main_status = slack_stat
         elif slack_stat == '通勤途中':
             slack_stat = 'Commuting'
         elif slack_stat in ['In a meeting', '会議中']:
@@ -354,26 +364,15 @@ if __name__ == '__main__':
         elif slack_stat in ['Working remotely', 'リモートで作業中']:
             if slack_stat == 'リモートで作業中':
                 slack_stat == 'Working remotely'
-            main_status, emoji = main_status_define(slack_stat)
+            main_status = slack_stat
         elif slack_stat == '病欠':
             slack_stat = 'Absence'
         elif slack_stat == '通話中':
             slack_stat = 'On a call'
-        elif slack_stat == "":
-            if main_status == "":
-                main_status = 'Home'
-                emoji = ":house_with_garden:"
-            slack_stat = main_status
-            profile = {
-                "status_text": slack_stat,
-                "status_emoji": emoji,
-                "status_expiration": 0}
-            profile = json.dumps(profile)
-            data["profile"] = profile
-            slack_res_str_post = requests.post(
-                Slack_url_set, data=data, timeout=timeout_time)
 
-        img_name, text_str, x_offset, y_offset, font_size = \
+        print(cnt, datestr, ":[new]-", slack_stat, "[old]-", slack_stat_old)
+
+        img_name, text_str, x_offset, y_offset, font_size, emoji = \
             status_param(slack_stat)
         img_file = os.path.join(dirname, img_name)
         text_pos = (text_pos_x + x_offset, text_pos_y + y_offset)
@@ -435,7 +434,6 @@ if __name__ == '__main__':
                 'Meeting', 'Out of office',
                 'At FXGI', 'Absence',
                 'Working remotely', 'Trip']:
-            print(slack_exp_uni)
             if slack_exp_uni != 0:
                 slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
                 slack_end = slack_exp.strftime("~%I:%M %p")

@@ -4,97 +4,111 @@
 		"text_str":"At home",
 		"pos_x_offset":0,
 		"pos_y_offset":0,
-		"font_size":4
+		"font_size":4,
+		"emoji":":house_with_garden:"
 	},
 	"At work":{
 		"img_file":"Work.png",
 		"text_str":"At office",
 		"pos_x_offset":0,
 		"pos_y_offset":0,
-		"font_size":4
+		"font_size":4,
+		"emoji":":office:"
 	},
 	"Commuting":{
 		"img_file":"Commuting.png",
 		"text_str":"Commuting",
 		"pos_x_offset":0,
 		"pos_y_offset":0,
-		"font_size":3
+		"font_size":3,
+		"emoji":":car:"
 	},
 	"In a meeting":{
 		"img_file":"Meeting.png",
 		"text_str":"Meeting",
 		"pos_x_offset":0,
 		"pos_y_offset":-20,
-		"font_size":4
+		"font_size":4,
+		"emoji":":speech_balloon:"
 	},
 	"Lunch":{
 		"img_file":"lunch.png",
 		"text_str":"Lunch",
 		"pos_x_offset":30,
 		"pos_y_offset":0,
-		"font_size":4
+		"font_size":4,
+		"emoji":":fork_and_knife:"
 	},
 	"Out of office":{
 		"img_file":"bluecar.png",
 		"text_str":"Out of office",
 		"pos_x_offset":20,
 		"pos_y_offset":0,
-		"font_size":2.5
+		"font_size":2.5,
+		"emoji":":blue_car:"
 	},
 	"At FXGI":{
 		"img_file":"Work.png",
 		"text_str":"At FXGI",
 		"pos_x_offset":0,
 		"pos_y_offset":0,
-		"font_size":4
+		"font_size":4,
+		"emoji":":office:"
 	},
 	"Working remotely":{
 		"img_file":"computer.png",
 		"text_str":"Working remotely",
 		"pos_x_offset":0,
 		"pos_y_offset":0,
-		"font_size":2
+		"font_size":2,
+		"emoji":":computer:"
 	},
 	"Absence":{
 		"img_file":"absence.png",
 		"text_str":"Absence",
 		"pos_x_offset":0,
 		"pos_y_offset":0,
-		"font_size":4
+		"font_size":4,
+		"emoji":":face_with_thermometer:"
 	},
 	"Trip":{
 		"img_file":"trip.png",
 		"text_str":"Trip",
 		"pos_x_offset":80,
 		"pos_y_offset":0,
-		"font_size":4
+		"font_size":4,
+		"emoji":":airplane:"
 	},
 	"At my office1":{
 		"img_file":"Work.png",
 		"text_str":"Good morning!",
 		"pos_x_offset":0,
 		"pos_y_offset":0,
-		"font_size":2.5
+		"font_size":2.5,
+		"emoji":":office:"
 	},
 	"At my office2":{
 		"img_file":"Work.png",
 		"text_str":"Good evening!",
 		"pos_x_offset":0,
 		"pos_y_offset":0,
-		"font_size":2.5
+		"font_size":2.5,
+		"emoji":":office:"
 	},
 	"At my office3":{
 		"img_file":"Work.png",
 		"text_str":"Hello!",
 		"pos_x_offset":80,
 		"pos_y_offset":0,
-		"font_size":4
+		"font_size":4,
+		"emoji":":office:"
 	},
 	"On a call":{
 		"img_file":"call.png",
 		"text_str":"On a call",
 		"pos_x_offset":80,
 		"pos_y_offset":0,
-		"font_size":3
+		"font_size":3,
+		"emoji":":slack_call:"
 	}
 }
