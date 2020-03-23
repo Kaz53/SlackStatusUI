@@ -350,7 +350,7 @@ if __name__ == '__main__':
         text_pos_y = 290
         if slack_stat == "":
             slack_stat = 'Home'
-            main_status = slack_stat
+            main_status = ""
         elif slack_stat == 'At work':
             main_status = slack_stat
         elif slack_stat == 'At my office':
