@@ -64,12 +64,12 @@
 		"emoji":":computer:"
 	},
 	"Absence":{
-		"img_file":"absence.png",
+		"img_file":"Home.png",
 		"text_str":"Absence",
 		"pos_x_offset":0,
 		"pos_y_offset":0,
 		"font_size":4,
-		"emoji":":face_with_thermometer:"
+		"emoji":":house_with_garden:"
 	},
 	"Trip":{
 		"img_file":"trip.png",
