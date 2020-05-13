@@ -266,6 +266,31 @@ def slack_st_chan(slack_stat, emoji, slack_url_set, data, timeout_time):
     data["profile"] = profile
     requests.post(slack_url_set, data=data, timeout=timeout_time)
 
+def slack_status_get(slack_url_get, data, timeout_time):
+    """Getting status from Slack"""
+    # Get current slack status
+    try:
+        slack_res_str = requests.get(
+            slack_url_get, params=data, timeout=timeout_time)
+    except requests.exceptions.RequestException:
+        time.sleep(30)
+        try:
+            slack_res_str = requests.get(
+                slack_url_get, params=data, timeout=timeout_time)
+        except requests.exceptions.RequestException:
+            time.sleep(60)
+            try:
+                slack_res_str = requests.get(
+                    slack_url_get, params=data, timeout=timeout_time)
+            except requests.exceptions.RequestException:
+                time.sleep(60)
+                post_slack("[Error!] Can't get slack status!")
+            else:
+                post_slack("Success to retry getting Slack status.")
+        else:
+            post_slack("Success to retry getting Slack status.")
+    return slack_res_str
+
 
 # Main Program
 if __name__ == '__main__':
@@ -317,29 +342,12 @@ if __name__ == '__main__':
                     main_status, emoji, slack_url_set, data, timeout_time)
                 time.sleep(5)
 
-        # Get current slack status
+        slack_res_str = slack_status_get(slack_url_get, data, timeout_time)
         try:
-            slack_res_str = requests.get(
-                slack_url_get, params=data, timeout=timeout_time)
-        except requests.exceptions.RequestException:
-            time.sleep(30)
-            try:
-                slack_res_str = requests.get(
-                    slack_url_get, params=data, timeout=timeout_time)
-            except requests.exceptions.RequestException:
-                time.sleep(60)
-                try:
-                    slack_res_str = requests.get(
-                        slack_url_get, params=data, timeout=timeout_time)
-                except requests.exceptions.RequestException:
-                    time.sleep(60)
-                    post_slack("[Error!] Can't get slack status!")
-                    break
-                else:
-                    post_slack("Success to retry getting Slack status.")
-            else:
-                post_slack("Success to retry getting Slack status.")
-        slack_json = slack_res_str.json()
+            slack_json = slack_res_str.json()
+        except json.decoder.JSONDecodeError:
+            slack_status_str = slack_status_get(slack_url_get, data, timeout_time)
+            slack_json = slack_res_str.json()
         slack_stat = slack_json['profile']['status_text']
         slack_exp_uni = slack_json['profile']['status_expiration']
         locale.setlocale(locale.LC_TIME, 'en_US.UTF-8')
