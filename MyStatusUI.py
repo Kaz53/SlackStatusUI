@@ -21,11 +21,12 @@ if __name__ == '__main__':
     slack_exp_uni = 0
     slack_exp_uni_old = 0
     exp_ch_post_f = False
+    main_status = ""
+    main_status_old = ""
     if "arm" in platform.machine():
         os.chdir('/home/pi/Projects/SlackStatusUI')
     pdirname = os.getcwd()
-    main_status = ""
-    main_status_old = ""
+
 
     # Post current time to Slack
     ini_mes = datetime.datetime.now().strftime("%a., %b. %d, %I:%M %p")
@@ -33,7 +34,7 @@ if __name__ == '__main__':
 
     # Loop main program
     while err == 0:
-
+        # Check expire status. If expire within 1min, change status to main_status.
         util_slack.slack_change_main(slack_exp_uni, pdirname, main_status)
 
         # Get Slack status
