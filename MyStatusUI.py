@@ -71,7 +71,7 @@ if __name__ == '__main__':
             slack_stat = "At my office"
 
         # Status change check adn post message.
-        util_slack.slack_stat_chan_check(slack_stat, slack_stat_old, ui_image, slack_exp_uni)
+        util_slack.slack_stat_chan_check(pdirname, slack_stat, slack_stat_old, ui_image, slack_exp_uni)
         util_slack.slack_mainstatus_chen_check(main_status, main_status_old)
 
         # Update parameters.
