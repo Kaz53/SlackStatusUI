@@ -1,19 +1,9 @@
-import datetime
 import os
 import json
+import ipget
 
 import util_slack
 
-
-
-def exp_check(slack_exp_uni):
-    """Check exp soon."""
-    now_unix = int(datetime.datetime.now().strftime('%s'))
-    diff_unix = slack_exp_uni - now_unix
-    if diff_unix // 60 <= 5:
-        mes_body = "Within 5min, Slack Status will be expired."
-        util_slack.post_slack(mes_body)
-    return(diff_unix // 60 <= 5)
 
 def load_status_param(pdirname, slack_stat):
     """Load status parameters."""
@@ -28,3 +18,20 @@ def load_status_param(pdirname, slack_stat):
     emoji = status_params_json[slack_stat]["emoji"]
 
     return img_name, text_str, x_offset, y_offset, font_size, emoji
+
+def ip_check(pdirname):
+    """IP Address check."""
+    ip_addr_prev = ""
+    logdir = os.path.join(pdirname, "log")
+    ip_file_name = os.path.join(logdir, 'ip.txt')
+    if os.path.exists(ip_file_name) is True:
+        with open(ip_file_name) as ip_file:
+            ip_addr_prev = ip_file.read()
+
+    ip_addr = ipget.ipget().ipaddr("wlan0")
+
+    if ip_addr != ip_addr_prev:
+        mes_body = 'New IP Address: ' + ip_addr
+        util_slack.post_slack(mes_body)
+        with open(ip_file_name, mode='w') as ip_file:
+            ip_file.write(ip_addr)
