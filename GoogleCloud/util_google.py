@@ -111,3 +111,54 @@ def log_output(pdirname, ui_image, slack_stat, slack_exp_uni):
         gdrive_upload(pdirname, save_file_name)
         # Save log
         write_log(pdirname, slack_stat, slack_exp_uni)
+
+
+def write_temp_log(data):
+    creds = None
+    gc_scopes = 'https://www.googleapis.com/auth/spreadsheets'
+    if os.path.exists('token_gs.pickle'):
+        with open('token_gs.pickle', 'rb') as token:
+            creds = pickle.load(token)
+    if not creds.valid:
+        print('test')
+    if not creds or not creds.valid:
+        if creds and creds.expired and creds.refresh_token:
+            creds.refresh(Request())
+        else:
+            flow = InstalledAppFlow.from_client_secrets_file(
+                'credentials.json', gc_scopes)
+            creds = flow.run_local_server(port=0)
+        # Save the credentials for the next run
+        with open('token_gs.pickle', 'wb') as token:
+            pickle.dump(creds, token)
+    service = discovery.build('sheets', 'v4', credentials=creds)
+
+    # The ID of the spreadsheet to update.
+    google_conf_file = os.path.join(pdirname, 'Google_setting.json')
+    with open(google_conf_file, 'rb') as google_conf:
+        google_conf_json = json.load(google_conf)
+    spreadsheet_id = google_conf_json["spreadsheet_id"]
+
+    # The A1 notation of the values to update.
+    range_ = 'temp_log'  # TODO: Update placeholder value.
+
+    # How the input data should be interpreted.
+    value_input_option = data  # TODO: Update placeholder value.
+
+    value_range_body = {
+        # TODO: Add desired entries to the request body. All existing entries
+        # will be replaced.
+        data
+    }
+
+    request = service.spreadsheets().values().update(spreadsheetId=spreadsheet_id, range=range_, valueInputOption=value_input_option, body=value_range_body)
+    response = request.execute()
+
+if __name__ == '__main__':
+    params = {
+        "slack_status": 'slack_stat',
+        "slack_exp_uni": 'slack_exp_uni',
+        "main_status": 'main_staus',
+        "exp_ch_post_f": 'exp_ch_post_f'
+        }
+    write_temp_log(params)
