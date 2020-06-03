@@ -75,7 +75,7 @@ if __name__ == '__main__':
         util_slack.slack_mainstatus_chen_check(main_status, main_status_old)
 
         # Update parameters.
-        time.sleep(20)
+        time.sleep(60)
         slack_stat_old = slack_stat
         slack_exp_uni_old = slack_exp_uni
         main_status_old = main_status
