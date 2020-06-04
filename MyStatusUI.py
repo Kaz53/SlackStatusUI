@@ -85,9 +85,9 @@ if __name__ == '__main__':
         time_now = datetime.datetime.now()
         hourstr = time_now.strftime("%H")
         minstr = time_now.strftime("%M")
-        if int(hourstr) >= 22 and int(minstr) >= 50:
-            util_google.log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
-            break
+        #if int(hourstr) >= 22 and int(minstr) >= 50:
+            #util_google.log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
+            #break
 
 cv2.waitKey(10)
 cv2.destroyAllWindows()
