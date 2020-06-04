@@ -119,6 +119,17 @@ def slack_mainstatus_chen_check(main_status, main_status_old):
                    + main_status_old + "]"
         post_slack(mes_body)
 
+def slack_mainstatus_chen_check(slack_exp_uni, slack_exp_uni_old):
+    slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
+    slack_exp = slack_exp.strftime("%I:%M %p")
+    slack_exp_old = datetime.datetime.fromtimestamp(slack_exp_uni_old)
+    slack_exp_old = slack_exp.strftime("%I:%M %p")
+    # Post slack when change slck exp time
+    if slack_exp_uni != slack_exp_uni_old:
+        mes_body = "Changed exp time to [" + slack_exp + "] from [" \
+                   + slack_exp_old + "]"
+        post_slack(mes_body)
+
 def greet_word():
     """Decide greeting word based on time."""
     time_now = datetime.datetime.now()

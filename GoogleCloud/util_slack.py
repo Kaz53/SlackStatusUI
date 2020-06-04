@@ -48,17 +48,17 @@ def slack_status_get():
         slack_res_str = requests.get(
             slack_url_get, params=data, timeout=timeout_time)
     except requests.exceptions.RequestException:
-        time.sleep(30)
+        time.sleep(10)
         try:
             slack_res_str = requests.get(
                 slack_url_get, params=data, timeout=timeout_time)
         except requests.exceptions.RequestException:
-            time.sleep(60)
+            time.sleep(10)
             try:
                 slack_res_str = requests.get(
                     slack_url_get, params=data, timeout=timeout_time)
             except requests.exceptions.RequestException:
-                time.sleep(60)
+                time.sleep(20)
                 post_slack("[Error!] Can't get slack status!")
                 slack_res_str = ''
             else:
@@ -80,7 +80,7 @@ def slack_change_main(slack_exp_uni, pdirname, main_status):
         now_unix = int(datetime.datetime.now().strftime('%s'))
         diff_unix = slack_exp_uni - now_unix
         # Change status to main_status if expire within 60sec
-        if diff_unix <= 60 and main_status != "":
+        if diff_unix <= 120 and main_status != "":
             _, _, _, _, _, emoji = util.load_status_param(pdirname, main_status)
             slack_st_chan(
                 main_status, emoji)

@@ -73,6 +73,7 @@ if __name__ == '__main__':
         # Status change check adn post message.
         util_slack.slack_stat_chan_check(pdirname, slack_stat, slack_stat_old, ui_image, slack_exp_uni)
         util_slack.slack_mainstatus_chen_check(main_status, main_status_old)
+        util_slack.slack_mainstatus_chen_check(slack_exp_uni, slack_exp_uni_old)
 
         # Update parameters.
         time.sleep(60)
