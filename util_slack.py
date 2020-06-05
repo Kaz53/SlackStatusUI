@@ -119,7 +119,7 @@ def slack_mainstatus_chen_check(main_status, main_status_old):
                    + main_status_old + "]"
         post_slack(mes_body)
 
-def slack_mainstatus_chen_check(slack_exp_uni, slack_exp_uni_old):
+def slack_exp_chen_check(slack_exp_uni, slack_exp_uni_old):
     slack_exp = datetime.datetime.fromtimestamp(slack_exp_uni)
     slack_exp = slack_exp.strftime("%I:%M %p")
     slack_exp_old = datetime.datetime.fromtimestamp(slack_exp_uni_old)
