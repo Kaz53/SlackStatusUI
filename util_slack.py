@@ -9,6 +9,9 @@ import datetime
 import util
 import util_google
 
+if "arm" in platform.machine():
+    os.chdir('/home/pi/Projects/SlackStatusUI')
+pdirname = os.getcwd()
 
 # Slack Seetings
 Slack_conf_file = os.path.join(pdirname, 'Slack_conf.json')
