@@ -8,7 +8,6 @@ import time
 
 import util
 import util_slack
-import util_google
 import image_handling
 
 
@@ -34,8 +33,6 @@ if __name__ == '__main__':
 
     # Loop main program
     while err == 0:
-        # Check expire status. If expire within 1min, change status to main_status.
-        util_slack.slack_change_main(slack_exp_uni, pdirname, main_status)
 
         # Get Slack status
         slack_json = util_slack.slack_status_get()
@@ -64,30 +61,19 @@ if __name__ == '__main__':
             if "arm" in platform.machine():
                 util.ip_check(pdirname)
 
-        # Check expring and post message.
-        exp_ch_post_f = util_slack.slack_exp_check(slack_exp_uni, slack_exp_uni_old, exp_ch_post_f)
-
         if "At my office" in slack_stat:
             slack_stat = "At my office"
 
-        # Status change check adn post message.
-        util_slack.slack_stat_chan_check(pdirname, slack_stat, slack_stat_old, ui_image, slack_exp_uni)
-        util_slack.slack_mainstatus_chen_check(main_status, main_status_old)
-        util_slack.slack_exp_chen_check(slack_exp_uni, slack_exp_uni_old)
-
         # Update parameters.
         time.sleep(60)
-        slack_stat_old = slack_stat
-        slack_exp_uni_old = slack_exp_uni
-        main_status_old = main_status
 
         cnt += 1
         time_now = datetime.datetime.now()
         hourstr = time_now.strftime("%H")
         minstr = time_now.strftime("%M")
-        #if int(hourstr) >= 22 and int(minstr) >= 50:
+        if int(hourstr) >= 22 and int(minstr) >= 50:
             #util_google.log_output(pdirname, ui_image, slack_stat, slack_exp_uni)
-            #break
+            break
 
 cv2.waitKey(10)
 cv2.destroyAllWindows()
