@@ -61,7 +61,7 @@
 		"pos_x_offset":0,
 		"pos_y_offset":0,
 		"font_size":2,
-		"emoji":":computer:"
+		"emoji":":laptop:"
 	},
 	"Absence":{
 		"img_file":"Home.png",
@@ -79,6 +79,14 @@
 		"font_size":4,
 		"emoji":":airplane:"
 	},
+  "be right back":{
+  "img_file":"brb.png",
+  "text_str":"be right back",
+  "pos_x_offset":20,
+  "pos_y_offset":0,
+  "font_size":2.5,
+  "emoji":":brb:"
+  },
 	"At my office1":{
 		"img_file":"Work.png",
 		"text_str":"Good morning!",
