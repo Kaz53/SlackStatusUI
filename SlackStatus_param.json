@@ -29,7 +29,7 @@
 		"pos_x_offset":0,
 		"pos_y_offset":-20,
 		"font_size":4,
-		"emoji":":conference_call:"
+		"emoji":":conference-call:"
 	},
 	"Lunch":{
 		"img_file":"lunch.png",
