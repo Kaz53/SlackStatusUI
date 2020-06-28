@@ -159,6 +159,8 @@ def slack_status_adj(slack_stat, main_status):
     elif slack_stat == 'At my office':
         slack_stat = greet_word()
         main_status = slack_stat
+    elif slack_stat == 'Server room':
+        main_status = 'At work'
     elif slack_stat == '通勤途中':
         slack_stat = 'Commuting'
     elif slack_stat in ['In a meeting', '会議中']:

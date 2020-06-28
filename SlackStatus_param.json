@@ -80,13 +80,21 @@
 		"emoji":":airplane:"
 	},
   "be right back":{
-  "img_file":"brb.png",
-  "text_str":"be right back",
-  "pos_x_offset":20,
-  "pos_y_offset":0,
-  "font_size":2.5,
-  "emoji":":brb:"
+    "img_file":"brb.png",
+    "text_str":"be right back",
+    "pos_x_offset":20,
+    "pos_y_offset":0,
+    "font_size":2.5,
+    "emoji":":brb:"
   },
+	"Server room":{
+		"img_file":"Work.png",
+		"text_str":"Server room",
+		"pos_x_offset":0,
+		"pos_y_offset":0,
+		"font_size":2.5,
+		"emoji":":office:"
+	},
 	"At my office1":{
 		"img_file":"Work.png",
 		"text_str":"Good morning!",
