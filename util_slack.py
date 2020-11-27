@@ -33,10 +33,10 @@ data_ffr = {"token": Slack_USER_TOKEN_FFR, "user": Slack_USER_ID_FFR}
 
 
 def post_slack(mes_body):
-    """Post message in Kazu channel."""
-    slack = slackweb.Slack(url=slack_kazu_url)
-    body = mes_body
-    slack.notify(text=body)
+    # """Post message in Kazu channel."""
+    # slack = slackweb.Slack(url=slack_kazu_url)
+    # body = mes_body
+    # slack.notify(text=body)
     """Post message to me."""
     post_data = {
                 "channel": Slack_USER_ID_FFR,
