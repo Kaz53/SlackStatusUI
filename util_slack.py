@@ -19,11 +19,17 @@ with open(Slack_conf_file, 'rb') as Slack_conf:
     Slack_conf_json = json.load(Slack_conf)
 Slack_USER_TOKEN = Slack_conf_json['Slack_USER_TOKEN']
 Slack_USER_ID = Slack_conf_json['Slack_USER_ID']
+Slack_USER_TOKEN_FFR = Slack_conf_json['Slack_USER_TOKEN_FFR']
+Slack_USER_ID_FFR = Slack_conf_json['Slack_USER_ID_FFR']
+
 slack_kazu_url = Slack_conf_json['Slack_Kazu_channel']
 slack_url_get = "https://slack.com/api/users.profile.get"
 slack_url_set = "https://slack.com/api/users.profile.set"
+slack_post = "https://slack.com/api/chat.postMessage"
+
 timeout_time = (3.0, 7.5)
 data = {"token": Slack_USER_TOKEN, "user": Slack_USER_ID}
+data_ffr = {"token": Slack_USER_TOKEN_FFR, "user": Slack_USER_ID_FFR}
 
 
 def post_slack(mes_body):
@@ -31,6 +37,13 @@ def post_slack(mes_body):
     slack = slackweb.Slack(url=slack_kazu_url)
     body = mes_body
     slack.notify(text=body)
+    """Post message to me."""
+    post_data = {
+                "channel": Slack_USER_ID_FFR,
+                "text": mes_body
+                }
+    headers = {"Authorization": "Bearer "+Slack_USER_TOKEN_FFR}
+    requests.post(slack_post, headers=headers, data=post_data, timeout=timeout_time)
 
 
 def slack_st_chan(slack_stat, emoji):
@@ -48,17 +61,17 @@ def slack_status_get():
     # Get current slack status
     try:
         slack_res_str = requests.get(
-            slack_url_get, params=data, timeout=timeout_time)
+            slack_url_get, params=data_ffr, timeout=timeout_time)
     except requests.exceptions.RequestException:
         time.sleep(30)
         try:
             slack_res_str = requests.get(
-                slack_url_get, params=data, timeout=timeout_time)
+                slack_url_get, params=data_ffr, timeout=timeout_time)
         except requests.exceptions.RequestException:
             time.sleep(60)
             try:
                 slack_res_str = requests.get(
-                    slack_url_get, params=data, timeout=timeout_time)
+                    slack_url_get, params=data_ffr, timeout=timeout_time)
             except requests.exceptions.RequestException:
                 time.sleep(60)
                 post_slack("[Error!] Can't get slack status!")
